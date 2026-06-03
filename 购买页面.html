@@ -19,7 +19,7 @@
         body {
             font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
             background-color: var(--bg-dark); color: var(--text-p);
-            background-image: linear-gradient(rgba(6, 11, 21, 0.94), rgba(6, 11, 21, 0.96)), url('background.jpg');
+            background-image: linear-gradient(rgba(6, 11, 21, 0.94), rgba(6, 11, 21, 0.96)), url('assets/images/backgrounds/background.jpg');
             background-size: cover; background-attachment: fixed; line-height: 1.6;
         }
         header {
@@ -127,9 +127,9 @@
 </head>
 <body>
 <header>
-    <a href="首页.html" class="logo">阿热灵绣</a>
+    <a href="index.html" class="logo">阿热灵绣</a>
     <nav>
-        <a href="首页.html">首页</a>
+        <a href="index.html">首页</a>
         <a href="项目介绍.html">项目介绍</a>
         <a href="私人定制页面.html">定制引擎</a>
         <a href="购买页面.html" style="color:var(--gold)">文创商城</a>
@@ -195,18 +195,18 @@
 
 <script>
     const products = [
-        { id: 1, category: "服装服饰", img: "clothes_bg.jpg", tag: "APPAREL / 服饰售卖", name: "灵绣潮韵文化衫", desc: "纯棉面料搭配数智纹样，定价参考服饰售卖 100 元。", price: 100, badge: "现货" },
-        { id: 2, category: "服装服饰", img: "heritage_work.jpg", tag: "RENTAL / 民族服装租借", name: "嘉绒服饰租借套餐", desc: "含基础穿搭指导，适合写真、研学和展演场景。", price: 200, badge: "预约" },
-        { id: 3, category: "包袋饰品", img: "creative_bag_1.jpg", tag: "BAGS / 精品手包", name: "嘉绒精绣艺术手包", desc: "手工绣片与现代包型结合，作为高端展示款。", price: 398, badge: "精品" },
-        { id: 4, category: "包袋饰品", img: "二期文创2.jpg", tag: "ACCESSORY / 香囊饰品", name: "福瑞嘉绒手工香囊", desc: "特色饰品价格区间 50-150 元，适合礼赠。", price: 88, badge: "热销" },
-        { id: 5, category: "包袋饰品", img: "pattern_detail_6.jpg", tag: "STATIONERY / 艺术书签", name: "嘉绒新生镂空书签", desc: "轻量文创，适合作为研学伴手礼。", price: 58, badge: "轻礼" },
-        { id: 6, category: "娃娃潮玩", img: "棉花娃娃藏族女.jpg", tag: "DOLL / 棉花娃娃", name: "藏族女款棉花娃娃", desc: "20cm 手工娃娃，定价参考娃娃 200-300 元区间。", price: 238, badge: "收藏" },
-        { id: 7, category: "娃娃潮玩", img: "棉花娃娃羌族男.JPG", tag: "DOLL / 羌族娃娃", name: "羌族男款棉花娃娃", desc: "微缩服饰和刺绣细节还原，适合展示与收藏。", price: 258, badge: "收藏" },
-        { id: 8, category: "写真研学", img: "photo_bg.jpg", tag: "SERVICE / 写真摄影", name: "民族风情写真基础套", desc: "含妆造、服饰、拍摄和基础修图，参考 250-500 元。", price: 399, badge: "预约" },
-        { id: 9, category: "写真研学", img: "scenic_study.jpg", tag: "STUDY / 一日研学", name: "多彩川西一日研学", desc: "非遗讲解、基础针法体验和作品带走。", price: 399, badge: "课程" },
-        { id: 10, category: "写真研学", img: "base.jpg", tag: "STUDY / 多日研学", name: "藏羌文化多日研学", desc: "多日游深度体验，参考文档定价 3999 元。", price: 3999, badge: "定制" },
-        { id: 11, category: "定制服务", img: "pattern_ai_butterfly.png", tag: "DIY / 文创设计", name: "文创 DIY 设计 1 小时", desc: "按小时计费，可用于纹样调整、书签或小件设计。", price: 30, badge: "小时" },
-        { id: 12, category: "定制服务", img: "pattern_ai_mountain.png", tag: "LICENSE / 纹样授权", name: "纹样版权授权咨询", desc: "展示授权流程，真实价格根据使用场景另行评估。", price: 0, badge: "咨询" }
+        { id: 1, category: "服装服饰", img: "assets/images/backgrounds/clothes_bg.jpg", tag: "APPAREL / 服饰售卖", name: "灵绣潮韵文化衫", desc: "纯棉面料搭配数智纹样，定价参考服饰售卖 100 元。", price: 100, badge: "现货" },
+        { id: 2, category: "服装服饰", img: "assets/images/heritage/heritage_work.jpg", tag: "RENTAL / 民族服装租借", name: "嘉绒服饰租借套餐", desc: "含基础穿搭指导，适合写真、研学和展演场景。", price: 200, badge: "预约" },
+        { id: 3, category: "包袋饰品", img: "assets/images/products/creative_bag_1.jpg", tag: "BAGS / 精品手包", name: "嘉绒精绣艺术手包", desc: "手工绣片与现代包型结合，作为高端展示款。", price: 398, badge: "精品" },
+        { id: 4, category: "包袋饰品", img: "assets/images/products/二期文创2.jpg", tag: "ACCESSORY / 香囊饰品", name: "福瑞嘉绒手工香囊", desc: "特色饰品价格区间 50-150 元，适合礼赠。", price: 88, badge: "热销" },
+        { id: 5, category: "包袋饰品", img: "assets/images/patterns/pattern_detail_6.jpg", tag: "STATIONERY / 艺术书签", name: "嘉绒新生镂空书签", desc: "轻量文创，适合作为研学伴手礼。", price: 58, badge: "轻礼" },
+        { id: 6, category: "娃娃潮玩", img: "assets/images/products/棉花娃娃藏族女.jpg", tag: "DOLL / 棉花娃娃", name: "藏族女款棉花娃娃", desc: "20cm 手工娃娃，定价参考娃娃 200-300 元区间。", price: 238, badge: "收藏" },
+        { id: 7, category: "娃娃潮玩", img: "assets/images/products/棉花娃娃羌族男.JPG", tag: "DOLL / 羌族娃娃", name: "羌族男款棉花娃娃", desc: "微缩服饰和刺绣细节还原，适合展示与收藏。", price: 258, badge: "收藏" },
+        { id: 8, category: "写真研学", img: "assets/images/backgrounds/photo_bg.jpg", tag: "SERVICE / 写真摄影", name: "民族风情写真基础套", desc: "含妆造、服饰、拍摄和基础修图，参考 250-500 元。", price: 399, badge: "预约" },
+        { id: 9, category: "写真研学", img: "assets/images/backgrounds/scenic_study.jpg", tag: "STUDY / 一日研学", name: "多彩川西一日研学", desc: "非遗讲解、基础针法体验和作品带走。", price: 399, badge: "课程" },
+        { id: 10, category: "写真研学", img: "assets/images/backgrounds/base.jpg", tag: "STUDY / 多日研学", name: "藏羌文化多日研学", desc: "多日游深度体验，参考文档定价 3999 元。", price: 3999, badge: "定制" },
+        { id: 11, category: "定制服务", img: "assets/images/patterns/pattern_ai_butterfly.png", tag: "DIY / 文创设计", name: "文创 DIY 设计 1 小时", desc: "按小时计费，可用于纹样调整、书签或小件设计。", price: 30, badge: "小时" },
+        { id: 12, category: "定制服务", img: "assets/images/patterns/pattern_ai_mountain.png", tag: "LICENSE / 纹样授权", name: "纹样版权授权咨询", desc: "展示授权流程，真实价格根据使用场景另行评估。", price: 0, badge: "咨询" }
     ];
     const cart = [];
     let activeCategory = "全部系列";
