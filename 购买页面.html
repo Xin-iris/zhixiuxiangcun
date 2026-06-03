@@ -1,295 +1,33 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>匠心精品馆 | 阿热灵绣 - 全系非遗商城</title>
-    <style>
-        :root {
-            --gold: #C5A059;
-            --bg-dark: #060B15;
-            --text-p: #FFFFFF;
-            --text-s: #A0AEC0;
-            --glass: rgba(14, 22, 38, 0.9);
-            --line: rgba(255,255,255,0.1);
-            --blue: #54B6C7;
-            --red: #B85A4F;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
-            background-color: var(--bg-dark); color: var(--text-p);
-            background-image: linear-gradient(rgba(6, 11, 21, 0.94), rgba(6, 11, 21, 0.96)), url('background.jpg');
-            background-size: cover; background-attachment: fixed; line-height: 1.6;
-        }
-        header {
-            display: flex; justify-content: space-between; align-items: center; padding: 20px 6%;
-            position: fixed; width: 100%; top: 0; z-index: 1000;
-            background: rgba(6, 11, 21, 0.95); backdrop-filter: blur(15px); border-bottom: 1px solid var(--line);
-        }
-        .logo { font-size: 1.4em; font-weight: 900; color: var(--gold); text-decoration: none; letter-spacing: 2px; }
-        nav a { color: var(--text-s); text-decoration: none; margin-left: 25px; font-size: 0.9em; transition: 0.3s; }
-        nav a:hover { color: var(--gold); }
-        .cart-toggle {
-            border: 1px solid rgba(197,160,89,0.5); background: rgba(197,160,89,0.12); color: var(--gold);
-            border-radius: 999px; padding: 8px 14px; font-weight: 800; cursor: pointer;
-        }
-        .container { max-width: 1280px; margin: 0 auto; padding: 118px 20px 80px; }
-        .shop-hero {
-            display: grid; grid-template-columns: 1fr 0.78fr; gap: 34px; align-items: center;
-            min-height: 420px; margin-bottom: 46px;
-        }
-        .eyebrow { color: var(--gold); font-size: 0.78em; letter-spacing: 4px; font-weight: 800; }
-        h1 { font-size: 3.4em; line-height: 1.08; margin: 18px 0; }
-        .shop-hero p { color: var(--text-s); max-width: 620px; font-size: 1.04em; }
-        .order-panel {
-            background: var(--glass); border: 1px solid var(--line); border-radius: 8px; padding: 22px;
-            box-shadow: 0 22px 60px rgba(0,0,0,0.26);
-        }
-        .order-panel h3 { color: var(--gold); margin-bottom: 14px; }
-        .progress { display: grid; gap: 12px; }
-        .progress div { display: flex; justify-content: space-between; border: 1px solid var(--line); background: rgba(255,255,255,0.04); border-radius: 8px; padding: 12px 14px; }
-        .progress span { color: var(--text-s); }
-        .search-section { margin-bottom: 28px; }
-        .search-container {
-            display: flex; max-width: 680px; position: relative;
-            background: rgba(255,255,255,0.05); border: 1px solid rgba(197, 160, 89, 0.3);
-            border-radius: 999px; padding: 5px; transition: 0.3s;
-        }
-        .search-container:focus-within { border-color: var(--gold); box-shadow: 0 0 20px rgba(197, 160, 89, 0.18); }
-        .search-input { flex: 1; background: transparent; border: none; padding: 12px 25px; color: #fff; font-size: 1em; outline: none; min-width: 0; }
-        .search-btn { background: var(--gold); border: none; padding: 10px 28px; border-radius: 999px; color: #000; font-weight: bold; cursor: pointer; }
-        .filter-bar { display: flex; gap: 12px; margin-bottom: 34px; overflow-x: auto; padding: 10px 0; }
-        .filter-item {
-            padding: 8px 20px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.1);
-            cursor: pointer; white-space: nowrap; transition: 0.3s; font-size: 0.85em; background: rgba(255,255,255,0.03);
-        }
-        .filter-item.active, .filter-item:hover { background: var(--gold); color: #000; border-color: var(--gold); font-weight: bold; }
-        .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
-        .product-card {
-            background: var(--glass); border-radius: 8px; overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.06); transition: 0.3s; display: flex; flex-direction: column;
-        }
-        .product-card:hover { transform: translateY(-6px); border-color: rgba(197,160,89,0.7); }
-        .product-img-wrap { position: relative; background: #020711; }
-        .product-img { width: 100%; height: 265px; object-fit: cover; display: block; }
-        .badge {
-            position: absolute; left: 14px; top: 14px; background: rgba(6,11,21,0.76); color: var(--gold);
-            border: 1px solid rgba(197,160,89,0.35); border-radius: 999px; padding: 5px 10px; font-size: 0.72em; font-weight: 800;
-        }
-        .product-info { padding: 22px; flex-grow: 1; display: flex; flex-direction: column; }
-        .product-tag { color: var(--gold); font-size: 0.72em; font-weight: bold; margin-bottom: 10px; letter-spacing: 1.2px; opacity: 0.86; }
-        .product-info h3 { font-size: 1.18em; margin-bottom: 10px; color: #fff; }
-        .product-info p { font-size: 0.84em; color: var(--text-s); margin-bottom: 20px; flex-grow: 1; }
-        .product-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--line); padding-top: 17px; gap: 14px; }
-        .price { font-size: 1.4em; font-weight: 900; color: #fff; white-space: nowrap; }
-        .price span { font-size: 0.58em; margin-right: 3px; color: var(--gold); }
-        .buy-btn { background: transparent; color: var(--gold); border: 1px solid var(--gold); padding: 8px 16px; border-radius: 999px; font-size: 0.8em; font-weight: bold; transition: 0.3s; cursor: pointer; }
-        .buy-btn:hover { background: var(--gold); color: #000; }
-        .cart-drawer {
-            position: fixed; top: 0; right: -430px; width: 410px; max-width: 92vw; height: 100vh; z-index: 1400;
-            background: rgba(8, 14, 25, 0.98); border-left: 1px solid rgba(197,160,89,0.28);
-            box-shadow: -26px 0 60px rgba(0,0,0,0.45); transition: 0.32s; padding: 22px; display: flex; flex-direction: column;
-        }
-        .cart-drawer.open { right: 0; }
-        .cart-head { display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
-        .icon-btn { background: transparent; border: 1px solid var(--line); color: #fff; border-radius: 50%; width: 34px; height: 34px; cursor: pointer; }
-        .cart-list { flex: 1; overflow: auto; padding: 16px 0; display: grid; gap: 12px; align-content: start; }
-        .cart-item { display: grid; grid-template-columns: 58px 1fr auto; gap: 12px; align-items: center; background: rgba(255,255,255,0.04); border: 1px solid var(--line); border-radius: 8px; padding: 10px; }
-        .cart-item img { width: 58px; height: 58px; object-fit: cover; border-radius: 6px; }
-        .cart-item h4 { font-size: 0.92em; }
-        .cart-item p { color: var(--text-s); font-size: 0.78em; }
-        .qty { display: flex; gap: 6px; align-items: center; justify-content: flex-end; margin-top: 8px; }
-        .qty button { width: 24px; height: 24px; border-radius: 50%; border: 1px solid rgba(197,160,89,0.45); color: var(--gold); background: transparent; cursor: pointer; }
-        .cart-total { border-top: 1px solid var(--line); padding-top: 16px; }
-        .cart-total div { display: flex; justify-content: space-between; margin-bottom: 8px; color: var(--text-s); }
-        .cart-total strong { color: #fff; }
-        .checkout { width: 100%; border: none; background: var(--gold); color: #07101d; border-radius: 8px; padding: 13px; font-weight: 900; cursor: pointer; margin-top: 10px; }
-        .modal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.72); z-index: 1600; display: none; place-items: center; padding: 20px;
-        }
-        .modal.open { display: grid; }
-        .modal-card { width: min(560px, 100%); background: #0b1424; border: 1px solid rgba(197,160,89,0.35); border-radius: 8px; padding: 24px; }
-        .order-code { color: var(--gold); font-size: 1.55em; font-weight: 900; margin: 10px 0; }
-        .order-summary { background: rgba(255,255,255,0.05); border: 1px solid var(--line); border-radius: 8px; padding: 14px; margin: 16px 0; }
-        .empty { color: var(--text-s); text-align: center; padding: 46px 10px; border: 1px dashed var(--line); border-radius: 8px; }
-        footer { text-align: center; padding: 70px 20px; opacity: 0.5; font-size: 0.85em; border-top: 1px solid rgba(255,255,255,0.05); }
-        @media (max-width: 960px) {
-            header { align-items: flex-start; gap: 14px; position: static; flex-direction: column; }
-            nav a { margin-left: 0; margin-right: 16px; display: inline-block; margin-top: 8px; }
-            .container { padding-top: 36px; }
-            .shop-hero { grid-template-columns: 1fr; min-height: auto; }
-            h1 { font-size: 2.45em; }
-            .product-grid { grid-template-columns: 1fr; }
-            .search-container { max-width: none; }
-        }
-    </style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>匠心精品馆 | 阿热灵绣</title>
+<style>
+:root{--gold:#C5A059;--gold2:#F3D58B;--bg:#060B15;--paper:#f6f1e7;--ink:#111827;--muted:#6b7280;--red:#7A0D18}*{margin:0;padding:0;box-sizing:border-box}body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#ece8df;color:var(--ink);line-height:1.55}.topbar{height:106px;background:#fff;display:grid;grid-template-columns:300px 1fr auto;align-items:center;gap:32px;padding:14px 5%;border-top:4px solid #1b2233;position:sticky;top:0;z-index:40;box-shadow:0 5px 24px rgba(0,0,0,.08)}.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:#050914}.brand img{width:90px;height:62px;object-fit:contain}.brand strong{font-size:1.55rem;letter-spacing:4px}.brand small{display:block;background:var(--red);color:#fff;padding:2px 10px;margin-top:4px;letter-spacing:1px}.shop-tools{display:flex;align-items:center;gap:18px;justify-content:flex-end}.search{max-width:520px;margin-left:auto;border-bottom:2px solid #222;display:flex;align-items:center;gap:13px;padding:8px 0}.search input{border:0;outline:0;font-size:1.08rem;font-weight:800;width:360px;background:transparent}.tool-btn{border:2px solid #222;background:#fff;border-radius:14px;padding:12px 18px;font-weight:900;display:flex;align-items:center;gap:9px;cursor:pointer}.icon-btn{border:0;background:#fff;font-size:1rem;font-weight:900;display:flex;align-items:center;gap:8px;cursor:pointer;position:relative}.icon{font-size:2rem;line-height:1}.cart-badge{position:absolute;top:-9px;right:-13px;border:2px solid var(--red);color:var(--red);background:#fff;border-radius:50%;width:24px;height:24px;display:grid;place-items:center;font-size:.75rem}.category-nav{height:64px;background:#fff;display:flex;justify-content:center;gap:44px;align-items:center;border-bottom:1px solid #ddd}.category-nav button{border:0;background:transparent;font-size:1.05rem;font-weight:900;cursor:pointer}.category-nav button.active,.category-nav button:hover{color:var(--red)}.banner{height:420px;background:linear-gradient(90deg,rgba(6,11,21,.66),rgba(6,11,21,.14)),url('assets/images/backgrounds/background.jpg') center/cover;display:flex;align-items:center;padding:0 8%;color:#fff}.banner h1{font-size:4rem;letter-spacing:10px}.banner p{max-width:620px;color:rgba(255,255,255,.75);margin-top:12px}.dots{text-align:center;background:#fff;padding:20px}.dots span{display:inline-block;width:14px;height:14px;border-radius:50%;background:#d6d6d6;margin:0 13px}.dots span.active{background:#555}.section{padding:70px 5%}.section-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:28px}.section-title{font-size:3rem;font-family:serif;letter-spacing:4px}.section-sub{color:var(--muted)}.product-rail{display:grid;grid-auto-flow:column;grid-auto-columns:250px;gap:22px;overflow-x:auto;padding:0 0 18px;scrollbar-color:var(--red)#ddd}.product-card{background:#fff;min-height:410px;padding:22px;text-align:center;position:relative;transition:.35s}.product-card:hover{transform:translateY(-10px);box-shadow:0 22px 60px rgba(0,0,0,.16)}.product-card.new:before{content:'NEW';position:absolute;left:0;top:0;background:linear-gradient(135deg,var(--red) 0 50%,transparent 50%);color:#fff;width:62px;height:62px;text-align:left;padding:8px;font-weight:900;font-size:.78rem}.product-card img{width:100%;height:210px;object-fit:contain;margin-bottom:18px}.product-card h3{font-size:1.08rem;min-height:52px}.price{font-weight:900;font-size:1.25rem;letter-spacing:2px;margin:10px 0}.buy{width:42px;height:42px;border:0;border-radius:50%;background:#d94c4c;color:#fff;font-size:1.2rem;cursor:pointer}.themes{background:#e8e5dd}.theme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:42px}.theme-card{height:420px;background:#fff;position:relative;overflow:hidden;padding:44px}.theme-card h3{font-size:3.2rem;line-height:1.12;font-family:serif}.theme-card img{position:absolute;right:-10px;bottom:-12px;width:58%;max-height:75%;object-fit:contain}.theme-card button{position:absolute;left:44px;bottom:42px;background:var(--red);color:#fff;border:0;padding:14px 28px;font-size:1.1rem;font-weight:900}.footer-banners{background:#555;padding:34px 5%;display:flex;justify-content:center;gap:24px}.footer-banners a{width:280px;height:74px;background:#fff3d7;color:#9b5a22;text-decoration:none;display:grid;place-items:center;font-weight:900}.shop-footer{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;background:#d5d0c9;padding:54px 5%;gap:36px}.shop-footer h4{font-size:1.4rem;margin-bottom:18px}.shop-footer p{margin:10px 0;color:#333}.cart-drawer{position:fixed;right:-430px;top:0;width:410px;height:100vh;background:#07101f;color:#fff;z-index:80;transition:.35s;padding:24px;display:flex;flex-direction:column;box-shadow:-18px 0 60px rgba(0,0,0,.42)}.cart-drawer.open{right:0}.cart-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.cart-list{flex:1;overflow:auto;display:grid;gap:12px;align-content:start}.cart-item{display:grid;grid-template-columns:64px 1fr auto;gap:12px;align-items:center;background:rgba(255,255,255,.06);border-radius:14px;padding:10px}.cart-item img{width:64px;height:64px;object-fit:cover;border-radius:10px}.qty button{width:24px;height:24px;border:0;border-radius:50%;margin:4px;background:var(--gold);font-weight:900}.checkout{border:0;background:linear-gradient(135deg,var(--gold2),var(--gold));padding:14px;border-radius:999px;font-weight:900;color:#07101f;margin-top:14px}.modal{position:fixed;inset:0;background:rgba(0,0,0,.62);display:none;place-items:center;z-index:90}.modal.open{display:grid}.modal-card{background:#fff;color:#111;padding:30px;border-radius:24px;max-width:480px}.filter-panel{position:fixed;left:50%;top:120px;transform:translateX(-50%);background:#fff;border-radius:24px;padding:22px;box-shadow:0 24px 70px rgba(0,0,0,.2);display:none;z-index:60}.filter-panel.open{display:block}.filter-panel button{margin:6px;border:1px solid #ddd;background:#fff;border-radius:999px;padding:8px 14px;cursor:pointer}.filter-panel button.active{background:#111;color:#fff}@media(max-width:1000px){.topbar{grid-template-columns:1fr}.category-nav{overflow:auto;justify-content:flex-start;padding:0 20px}.theme-grid,.shop-footer{grid-template-columns:1fr}.banner h1{font-size:2.6rem}.cart-drawer{width:100%;right:-100%}}
+</style>
 </head>
 <body>
-<header>
-    <a href="首页.html" class="logo">阿热灵绣</a>
-    <nav>
-        <a href="首页.html">首页</a>
-        <a href="项目介绍.html">项目介绍</a>
-        <a href="私人定制页面.html">定制引擎</a>
-        <a href="购买页面.html" style="color:var(--gold)">文创商城</a>
-        <button class="cart-toggle" onclick="toggleCart(true)">购物车 <span id="cartCount">0</span></button>
-    </nav>
-</header>
-
-<main class="container">
-    <section class="shop-hero">
-        <div>
-            <div class="eyebrow">Cultural Commerce</div>
-            <h1>从非遗纹样到日常器物的完整购买展示。</h1>
-            <p>商城支持搜索筛选、加入购物车、数量调整与订单生成。当前为前端演示版，订单不会提交到真实后端。</p>
-        </div>
-        <div class="order-panel">
-            <h3>购买流程</h3>
-            <div class="progress">
-                <div><span>01 选择产品或服务</span><strong>已补全</strong></div>
-                <div><span>02 加入购物车</span><strong>前端状态</strong></div>
-                <div><span>03 生成订单</span><strong>演示编号</strong></div>
-                <div><span>04 线下支付/预约</span><strong>待对接</strong></div>
-            </div>
-        </div>
-    </section>
-
-    <div class="search-section">
-        <div class="search-container">
-            <input type="text" class="search-input" id="searchInput" placeholder="搜索文化衫、手包、写真、研学、DIY...">
-            <button class="search-btn" onclick="renderProducts()">搜索</button>
-        </div>
-    </div>
-    <div class="filter-bar" id="filterBar"></div>
-    <div class="product-grid" id="productGrid"></div>
-</main>
-
-<aside class="cart-drawer" id="cartDrawer">
-    <div class="cart-head">
-        <h3>购物车</h3>
-        <button class="icon-btn" onclick="toggleCart(false)">×</button>
-    </div>
-    <div class="cart-list" id="cartList"></div>
-    <div class="cart-total">
-        <div><span>商品小计</span><strong id="subtotal">¥0</strong></div>
-        <div><span>预约/包装服务</span><strong id="serviceFee">¥0</strong></div>
-        <div><span>应付合计</span><strong id="total">¥0</strong></div>
-        <button class="checkout" onclick="createOrder()">生成订单</button>
-    </div>
-</aside>
-
-<div class="modal" id="orderModal">
-    <div class="modal-card">
-        <h2>订单已生成</h2>
-        <p>这是展示型订单，用于说明商城闭环；真实支付、库存和物流后续可接入后端。</p>
-        <div class="order-code" id="orderCode"></div>
-        <div class="order-summary" id="orderSummary"></div>
-        <button class="checkout" onclick="closeOrder()">完成演示</button>
-    </div>
-</div>
-
-<footer>
-    <p>© 2026 成都市阿热灵绣刺绣有限责任公司 | 数字化传承非遗之美</p>
-</footer>
-
+<header class="topbar"><a href="index.html" class="brand"><img src="assets/images/brand/ar-logo-clear.svg" alt="阿热灵绣 logo"><span><strong>阿热灵绣精品</strong><small>ARE LINGXIU SHOP</small></span></a><div class="search"><span class="icon">⌕</span><input id="searchInput" placeholder="搜索" oninput="renderAll()"></div><div class="shop-tools"><button class="tool-btn" onclick="toggleFilter()"><span class="icon">☷</span>筛选条件</button><button class="icon-btn"><span class="icon">♙</span>会员</button><button class="icon-btn" onclick="toggleCart(true)"><span class="icon">🛒</span>购物车<span class="cart-badge" id="cartCount">0</span></button></div></header>
+<nav class="category-nav" id="categoryNav"></nav>
+<section class="banner"><div><h1>匠心精品馆</h1><p>保留深蓝金线的品牌色调，采用博物馆商城式搜索、分类、主题陈列和横向商品带。</p></div></section><div class="dots"><span class="active"></span><span></span><span></span><span></span><span></span></div>
+<div class="filter-panel" id="filterPanel"></div><main id="shopMain"></main>
+<section class="themes"><div class="section"><h2 class="section-title" style="text-align:center;margin-bottom:40px">热门主题</h2><div class="theme-grid"><article class="theme-card"><h3>新品<br>上架</h3><button onclick="setCategory('新品推荐')">立即购买</button><img src="assets/images/products/generated/shop_book_blue.svg" alt="新品上架"></article><article class="theme-card"><h3>每月<br>主打</h3><button onclick="setCategory('典藏精品')">立即购买</button><img src="assets/images/products/generated/shop_scarf_gold.svg" alt="每月主打"></article><article class="theme-card"><h3>折扣<br>特惠</h3><button onclick="setCategory('轻礼伴手')">立即购买</button><img src="assets/images/products/generated/shop_cup_green.svg" alt="折扣特惠"></article></div></div></section>
+<div class="footer-banners"><a href="#">纹样授权咨询</a><a href="#">非遗公益赠书专区</a><a href="#">精品电子报订阅</a></div><footer class="shop-footer"><div><h4>联系客服</h4><p>E-mail：service@arelingxiu.com</p><p>Line@：@arelingxiu</p><p>联系渠道：微信 / 电话 / 研学预约</p></div><div><h4>关于我们</h4><p>项目介绍</p><p>线上型录</p><p>公益赠书</p><p>网站导览</p></div><div><h4>阿热灵绣</h4><p>传承人档案</p><p>纹样数据库</p><p>当期展览</p><p>交通位置</p></div><div><h4>顾客服务</h4><p>会员权益</p><p>交易安全</p><p>隐私权保护</p><p>订阅电子报</p></div></footer>
+<aside class="cart-drawer" id="cartDrawer"><div class="cart-head"><h2>购物车</h2><button class="tool-btn" onclick="toggleCart(false)">关闭</button></div><div class="cart-list" id="cartList"></div><div><p>商品小计 <strong id="subtotal" style="float:right">¥0</strong></p><button class="checkout" onclick="createOrder()">生成订单</button></div></aside><div class="modal" id="orderModal"><div class="modal-card"><h2>订单已生成</h2><p>这是展示型订单，真实支付和库存后续接入后端。</p><h3 id="orderCode"></h3><div id="orderSummary"></div><button class="checkout" onclick="closeOrder()">完成演示</button></div></div>
 <script>
-    const products = [
-        { id: 1, category: "服装服饰", img: "clothes_bg.jpg", tag: "APPAREL / 服饰售卖", name: "灵绣潮韵文化衫", desc: "纯棉面料搭配数智纹样，定价参考服饰售卖 100 元。", price: 100, badge: "现货" },
-        { id: 2, category: "服装服饰", img: "heritage_work.jpg", tag: "RENTAL / 民族服装租借", name: "嘉绒服饰租借套餐", desc: "含基础穿搭指导，适合写真、研学和展演场景。", price: 200, badge: "预约" },
-        { id: 3, category: "包袋饰品", img: "creative_bag_1.jpg", tag: "BAGS / 精品手包", name: "嘉绒精绣艺术手包", desc: "手工绣片与现代包型结合，作为高端展示款。", price: 398, badge: "精品" },
-        { id: 4, category: "包袋饰品", img: "二期文创2.jpg", tag: "ACCESSORY / 香囊饰品", name: "福瑞嘉绒手工香囊", desc: "特色饰品价格区间 50-150 元，适合礼赠。", price: 88, badge: "热销" },
-        { id: 5, category: "包袋饰品", img: "pattern_detail_6.jpg", tag: "STATIONERY / 艺术书签", name: "嘉绒新生镂空书签", desc: "轻量文创，适合作为研学伴手礼。", price: 58, badge: "轻礼" },
-        { id: 6, category: "娃娃潮玩", img: "棉花娃娃藏族女.jpg", tag: "DOLL / 棉花娃娃", name: "藏族女款棉花娃娃", desc: "20cm 手工娃娃，定价参考娃娃 200-300 元区间。", price: 238, badge: "收藏" },
-        { id: 7, category: "娃娃潮玩", img: "棉花娃娃羌族男.JPG", tag: "DOLL / 羌族娃娃", name: "羌族男款棉花娃娃", desc: "微缩服饰和刺绣细节还原，适合展示与收藏。", price: 258, badge: "收藏" },
-        { id: 8, category: "写真研学", img: "photo_bg.jpg", tag: "SERVICE / 写真摄影", name: "民族风情写真基础套", desc: "含妆造、服饰、拍摄和基础修图，参考 250-500 元。", price: 399, badge: "预约" },
-        { id: 9, category: "写真研学", img: "scenic_study.jpg", tag: "STUDY / 一日研学", name: "多彩川西一日研学", desc: "非遗讲解、基础针法体验和作品带走。", price: 399, badge: "课程" },
-        { id: 10, category: "写真研学", img: "base.jpg", tag: "STUDY / 多日研学", name: "藏羌文化多日研学", desc: "多日游深度体验，参考文档定价 3999 元。", price: 3999, badge: "定制" },
-        { id: 11, category: "定制服务", img: "pattern_ai_butterfly.png", tag: "DIY / 文创设计", name: "文创 DIY 设计 1 小时", desc: "按小时计费，可用于纹样调整、书签或小件设计。", price: 30, badge: "小时" },
-        { id: 12, category: "定制服务", img: "pattern_ai_mountain.png", tag: "LICENSE / 纹样授权", name: "纹样版权授权咨询", desc: "展示授权流程，真实价格根据使用场景另行评估。", price: 0, badge: "咨询" }
-    ];
-    const cart = [];
-    let activeCategory = "全部系列";
-
-    function money(value) { return value === 0 ? "咨询" : `¥${value}`; }
-    function renderFilters() {
-        const cats = ["全部系列", ...new Set(products.map(p => p.category))];
-        document.getElementById("filterBar").innerHTML = cats.map(cat => `<div class="filter-item ${cat === activeCategory ? "active" : ""}" onclick="activeCategory='${cat}'; renderProducts();">${cat}</div>`).join("");
-    }
-    function renderProducts() {
-        renderFilters();
-        const query = document.getElementById("searchInput").value.trim().toLowerCase();
-        const list = products.filter(p => (activeCategory === "全部系列" || p.category === activeCategory) && (!query || `${p.name}${p.desc}${p.category}`.toLowerCase().includes(query)));
-        document.getElementById("productGrid").innerHTML = list.map(p => `
-            <article class="product-card">
-                <div class="product-img-wrap"><img src="${p.img}" class="product-img" alt="${p.name}"><span class="badge">${p.badge}</span></div>
-                <div class="product-info">
-                    <span class="product-tag">${p.tag}</span>
-                    <h3>${p.name}</h3>
-                    <p>${p.desc}</p>
-                    <div class="product-footer">
-                        <div class="price">${p.price === 0 ? "咨询定价" : `<span>¥</span>${p.price}`}</div>
-                        <button class="buy-btn" onclick="addToCart(${p.id})">${p.price === 0 ? "加入咨询单" : "加入购物车"}</button>
-                    </div>
-                </div>
-            </article>
-        `).join("") || `<p class="empty">没有找到相关产品，换个关键词试试。</p>`;
-    }
-    function addToCart(id) {
-        const product = products.find(p => p.id === id);
-        const item = cart.find(i => i.id === id);
-        if (item) item.qty += 1;
-        else cart.push({ ...product, qty: 1 });
-        renderCart();
-        toggleCart(true);
-    }
-    function changeQty(id, delta) {
-        const item = cart.find(i => i.id === id);
-        if (!item) return;
-        item.qty += delta;
-        if (item.qty <= 0) cart.splice(cart.indexOf(item), 1);
-        renderCart();
-    }
-    function renderCart() {
-        document.getElementById("cartCount").textContent = cart.reduce((sum, item) => sum + item.qty, 0);
-        document.getElementById("cartList").innerHTML = cart.length ? cart.map(item => `
-            <div class="cart-item">
-                <img src="${item.img}" alt="${item.name}">
-                <div><h4>${item.name}</h4><p>${money(item.price)} · ${item.category}</p><div class="qty"><button onclick="changeQty(${item.id}, -1)">-</button><span>${item.qty}</span><button onclick="changeQty(${item.id}, 1)">+</button></div></div>
-                <strong>${item.price === 0 ? "咨询" : `¥${item.price * item.qty}`}</strong>
-            </div>
-        `).join("") : `<div class="empty">购物车还是空的，先选择一件产品或服务。</div>`;
-        const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-        const serviceFee = subtotal > 0 ? 12 : 0;
-        document.getElementById("subtotal").textContent = `¥${subtotal}`;
-        document.getElementById("serviceFee").textContent = `¥${serviceFee}`;
-        document.getElementById("total").textContent = `¥${subtotal + serviceFee}`;
-    }
-    function toggleCart(open) {
-        document.getElementById("cartDrawer").classList.toggle("open", open);
-    }
-    function createOrder() {
-        if (!cart.length) return;
-        const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-        const serviceFee = subtotal > 0 ? 12 : 0;
-        const code = `ARLX-${new Date().getFullYear()}${String(Date.now()).slice(-6)}`;
-        document.getElementById("orderCode").textContent = code;
-        document.getElementById("orderSummary").innerHTML = `
-            ${cart.map(item => `<p>${item.name} × ${item.qty} <strong style="float:right">${item.price === 0 ? "咨询" : `¥${item.price * item.qty}`}</strong></p>`).join("")}
-            <hr style="border-color:rgba(255,255,255,0.1); margin:12px 0;">
-            <p>服务费 <strong style="float:right">¥${serviceFee}</strong></p>
-            <p>订单合计 <strong style="float:right;color:var(--gold)">¥${subtotal + serviceFee}</strong></p>
-        `;
-        document.getElementById("orderModal").classList.add("open");
-    }
-    function closeOrder() {
-        cart.splice(0, cart.length);
-        renderCart();
-        toggleCart(false);
-        document.getElementById("orderModal").classList.remove("open");
-    }
-    renderProducts();
-    renderCart();
+const products=[
+{id:1,cat:'新品推荐',name:'藏羌纹样典藏手账',img:'assets/images/products/generated/shop_book_blue.svg',price:128,tag:'NEW'}, {id:2,cat:'新品推荐',name:'金线云纹丝巾',img:'assets/images/products/generated/shop_scarf_gold.svg',price:268,tag:'NEW'}, {id:3,cat:'新品推荐',name:'花云旅行杯',img:'assets/images/products/generated/shop_cup_green.svg',price:98,tag:'NEW'}, {id:4,cat:'新品推荐',name:'非遗节庆礼盒',img:'assets/images/products/generated/shop_box_red.svg',price:398,tag:'NEW'},
+{id:5,cat:'典藏精品',name:'嘉绒精绣艺术手包',img:'assets/images/products/creative_bag_1.jpg',price:398,tag:'HOT'}, {id:6,cat:'典藏精品',name:'藏羌纹样盲盒',img:'assets/images/products/藏羌盲盒.jpg',price:88,tag:'HOT'}, {id:7,cat:'典藏精品',name:'蝶榴手机壳',img:'assets/images/products/generated/shop_phone_purple.svg',price:79,tag:'NEW'}, {id:8,cat:'典藏精品',name:'羌绣香囊挂饰',img:'assets/images/products/generated/shop_pendant_ivory.svg',price:58,tag:'NEW'},
+{id:9,cat:'服饰配件',name:'灵绣潮韵文化衫',img:'assets/images/backgrounds/clothes_bg.jpg',price:100,tag:'APPAREL'}, {id:10,cat:'服饰配件',name:'嘉绒服饰租借套餐',img:'assets/images/heritage/heritage_work.jpg',price:200,tag:'RENTAL'}, {id:11,cat:'服饰配件',name:'棉花娃娃藏族女',img:'assets/images/products/棉花娃娃藏族女.jpg',price:238,tag:'DOLL'}, {id:12,cat:'服饰配件',name:'棉花娃娃羌族男',img:'assets/images/products/棉花娃娃羌族男.JPG',price:258,tag:'DOLL'},
+{id:13,cat:'研学服务',name:'民族风情写真基础套',img:'assets/images/backgrounds/photo_bg.jpg',price:399,tag:'SERVICE'}, {id:14,cat:'研学服务',name:'多彩川西一日研学',img:'assets/images/backgrounds/scenic_study.jpg',price:399,tag:'STUDY'}, {id:15,cat:'研学服务',name:'藏羌文化多日研学',img:'assets/images/backgrounds/base.jpg',price:3999,tag:'STUDY'}, {id:16,cat:'纹样授权',name:'纹样版权授权咨询',img:'assets/images/patterns/generated/pattern_12.svg',price:0,tag:'LICENSE'}];
+const cart=[];let active='全部商品';const cats=['全部商品','新品推荐','典藏精品','服饰配件','研学服务','纹样授权'];
+function money(v){return v===0?'咨询':`¥${v}`}
+function setCategory(c){active=c;renderAll();scrollTo({top:520,behavior:'smooth'});}function toggleFilter(){document.getElementById('filterPanel').classList.toggle('open')}
+function renderNav(){document.getElementById('categoryNav').innerHTML=cats.map(c=>`<button class="${active===c?'active':''}" onclick="setCategory('${c}')">${c}</button>`).join('');document.getElementById('filterPanel').innerHTML=cats.map(c=>`<button class="${active===c?'active':''}" onclick="setCategory('${c}');toggleFilter()">${c}</button>`).join('')}
+function sectionFor(cat){const q=document.getElementById('searchInput').value.trim().toLowerCase();return products.filter(p=>(cat==='全部商品'||p.cat===cat)&&(!q||`${p.name}${p.cat}${p.tag}`.toLowerCase().includes(q)))}
+function renderAll(){renderNav();const show=cats.filter(c=>c!=='全部商品'&&(active==='全部商品'||active===c));document.getElementById('shopMain').innerHTML=show.map(cat=>{const list=sectionFor(cat);return `<section class="section"><div class="section-head"><div><h2 class="section-title">${cat}</h2><p class="section-sub">横向滑动浏览，点击购物车图标加入订单。</p></div><span>${list.length} 件</span></div><div class="product-rail">${list.map(p=>`<article class="product-card ${p.tag==='NEW'?'new':''}"><img src="${p.img}" alt="${p.name}"><h3>${p.name}</h3><div class="price">${money(p.price)}</div><button class="buy" onclick="addToCart(${p.id})">🛒</button></article>`).join('')||'<p>暂无商品</p>'}</div></section>`}).join('')}
+function addToCart(id){const p=products.find(x=>x.id===id);const item=cart.find(x=>x.id===id);item?item.qty++:cart.push({...p,qty:1});renderCart();toggleCart(true)}function changeQty(id,d){const it=cart.find(x=>x.id===id);if(!it)return;it.qty+=d;if(it.qty<=0)cart.splice(cart.indexOf(it),1);renderCart()}function renderCart(){document.getElementById('cartCount').textContent=cart.reduce((s,i)=>s+i.qty,0);document.getElementById('cartList').innerHTML=cart.length?cart.map(i=>`<div class="cart-item"><img src="${i.img}" alt="${i.name}"><div><h4>${i.name}</h4><p>${money(i.price)}</p><div class="qty"><button onclick="changeQty(${i.id},-1)">-</button>${i.qty}<button onclick="changeQty(${i.id},1)">+</button></div></div><strong>${i.price===0?'咨询':`¥${i.price*i.qty}`}</strong></div>`).join(''):'<p>购物车还是空的。</p>';document.getElementById('subtotal').textContent=`¥${cart.reduce((s,i)=>s+i.price*i.qty,0)}`}
+function toggleCart(o){document.getElementById('cartDrawer').classList.toggle('open',o)}function createOrder(){if(!cart.length)return;document.getElementById('orderCode').textContent=`ARLX-${Date.now().toString().slice(-8)}`;document.getElementById('orderSummary').innerHTML=cart.map(i=>`<p>${i.name} × ${i.qty}<strong style="float:right">${money(i.price*i.qty)}</strong></p>`).join('');document.getElementById('orderModal').classList.add('open')}function closeOrder(){cart.splice(0);renderCart();toggleCart(false);document.getElementById('orderModal').classList.remove('open')}renderAll();renderCart();
 </script>
 </body>
 </html>

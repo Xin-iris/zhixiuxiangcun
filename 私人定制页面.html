@@ -1,372 +1,46 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>智绣实验室 | 阿热灵绣 - 纹样识别与定制引擎</title>
-    <style>
-        :root {
-            --gold: #C5A059;
-            --bg-dark: #060B15;
-            --panel: rgba(12, 20, 34, 0.88);
-            --panel-soft: rgba(255,255,255,0.045);
-            --line: rgba(255,255,255,0.11);
-            --text-p: #FFFFFF;
-            --text-s: #A0AEC0;
-            --blue: #54B6C7;
-            --red: #B85A4F;
-            --green: #7FA36A;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
-            color: var(--text-p);
-            background:
-                linear-gradient(rgba(6, 11, 21, 0.92), rgba(6, 11, 21, 0.96)),
-                url('background.jpg') center/cover fixed;
-            line-height: 1.6;
-        }
-        header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 20px 6%; position: fixed; width: 100%; top: 0; z-index: 1000;
-            background: rgba(6, 11, 21, 0.95); backdrop-filter: blur(15px);
-            border-bottom: 1px solid var(--line);
-        }
-        .logo { font-size: 1.4em; font-weight: 900; color: var(--gold); text-decoration: none; letter-spacing: 2px; }
-        nav a { color: var(--text-s); text-decoration: none; margin-left: 25px; font-size: 0.9em; transition: 0.3s; }
-        nav a:hover { color: var(--gold); }
-        .container { max-width: 1240px; margin: 0 auto; padding: 118px 20px 80px; }
-        .eyebrow { color: var(--gold); font-size: 0.78em; letter-spacing: 4px; font-weight: 800; text-transform: uppercase; }
-        h1 { font-size: 3.4em; line-height: 1.1; margin: 18px 0 18px; letter-spacing: 1px; }
-        h2 { font-size: 1.8em; margin-bottom: 18px; }
-        p { color: var(--text-s); }
-
-        .lab-hero {
-            min-height: 560px; display: grid; grid-template-columns: 1fr 0.92fr;
-            gap: 34px; align-items: center; padding-bottom: 56px;
-        }
-        .hero-copy { max-width: 620px; }
-        .hero-copy p { font-size: 1.05em; max-width: 560px; }
-        .hero-actions { display: flex; gap: 14px; margin-top: 30px; flex-wrap: wrap; }
-        .btn {
-            border: 1px solid var(--gold); background: var(--gold); color: #08101d;
-            padding: 12px 22px; border-radius: 999px; font-weight: 800; cursor: pointer;
-            text-decoration: none; transition: 0.25s; display: inline-flex; align-items: center; gap: 8px;
-        }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(197,160,89,0.22); }
-        .btn.ghost { background: transparent; color: var(--gold); }
-        .hero-visual {
-            background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
-            padding: 22px; box-shadow: 0 22px 60px rgba(0,0,0,0.28);
-        }
-        .scan-box {
-            position: relative; overflow: hidden; border-radius: 8px; border: 1px solid rgba(197,160,89,0.28);
-            aspect-ratio: 1 / 1; background: #020711;
-        }
-        .scan-box img { width: 100%; height: 100%; object-fit: cover; opacity: 0.94; }
-        .scan-line {
-            position: absolute; left: 0; right: 0; height: 2px; top: 18%;
-            background: linear-gradient(90deg, transparent, var(--gold), transparent);
-            box-shadow: 0 0 24px var(--gold); animation: scan 3.2s infinite ease-in-out;
-        }
-        @keyframes scan { 0%,100% { top: 14%; } 50% { top: 82%; } }
-        .scan-meta {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px;
-        }
-        .metric { background: var(--panel-soft); border: 1px solid var(--line); border-radius: 8px; padding: 14px; }
-        .metric strong { display: block; color: var(--gold); font-size: 1.35em; }
-        .metric span { color: var(--text-s); font-size: 0.78em; }
-
-        .section { padding: 56px 0; border-top: 1px solid rgba(255,255,255,0.06); }
-        .section-head { display: flex; justify-content: space-between; gap: 24px; align-items: end; margin-bottom: 24px; }
-        .section-head p { max-width: 620px; }
-        .panel {
-            background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 24px;
-            box-shadow: 0 14px 38px rgba(0,0,0,0.22);
-        }
-
-        .recognition-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 22px; }
-        .upload-zone {
-            min-height: 288px; border: 1px dashed rgba(197,160,89,0.5); border-radius: 8px;
-            background: rgba(197,160,89,0.06); padding: 22px; display: flex; flex-direction: column;
-            justify-content: space-between;
-        }
-        .upload-zone img { width: 100%; max-height: 210px; object-fit: cover; border-radius: 8px; margin-top: 14px; }
-        .pipeline { display: grid; gap: 12px; }
-        .step {
-            display: grid; grid-template-columns: 42px 1fr auto; gap: 14px; align-items: center;
-            background: rgba(255,255,255,0.04); border: 1px solid var(--line); border-radius: 8px; padding: 14px;
-        }
-        .step b {
-            width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center;
-            background: rgba(197,160,89,0.16); color: var(--gold);
-        }
-        .step span { color: var(--text-s); font-size: 0.84em; }
-        .confidence { color: var(--gold); font-weight: 900; }
-
-        .tabs { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 20px; }
-        .tab {
-            background: rgba(255,255,255,0.04); color: var(--text-s); border: 1px solid var(--line);
-            padding: 9px 18px; border-radius: 999px; cursor: pointer; white-space: nowrap;
-        }
-        .tab.active { background: var(--gold); color: #07101d; border-color: var(--gold); font-weight: 800; }
-        .database-layout { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 22px; }
-        .pattern-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-        .pattern-card {
-            border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: rgba(255,255,255,0.04);
-            cursor: pointer; transition: 0.25s;
-        }
-        .pattern-card:hover, .pattern-card.active { border-color: var(--gold); transform: translateY(-3px); }
-        .pattern-card img { width: 100%; aspect-ratio: 1 / 0.78; object-fit: cover; display: block; }
-        .pattern-card div { padding: 14px; }
-        .pattern-card h3 { font-size: 1em; margin-bottom: 4px; }
-        .pattern-card p { font-size: 0.78em; }
-        .detail-img { width: 100%; border-radius: 8px; aspect-ratio: 1 / 0.72; object-fit: cover; margin-bottom: 18px; }
-        .kv { display: grid; grid-template-columns: 96px 1fr; gap: 10px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.07); }
-        .kv span { color: var(--text-s); }
-        .tag-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0 20px; }
-        .small-tag { border: 1px solid rgba(197,160,89,0.35); color: var(--gold); border-radius: 999px; padding: 5px 10px; font-size: 0.76em; }
-
-        .preference-grid { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 22px; }
-        .choice-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-        .choice {
-            text-align: left; border: 1px solid var(--line); background: rgba(255,255,255,0.04);
-            color: var(--text-p); padding: 15px; border-radius: 8px; cursor: pointer;
-        }
-        .choice.active { border-color: var(--gold); background: rgba(197,160,89,0.12); }
-        .choice strong { display: block; margin-bottom: 5px; }
-        .choice span { color: var(--text-s); font-size: 0.84em; }
-        .result-card {
-            display: grid; grid-template-columns: 230px 1fr; gap: 20px; align-items: center;
-            border: 1px solid rgba(197,160,89,0.24); border-radius: 8px; padding: 18px; background: rgba(197,160,89,0.07);
-        }
-        .result-card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 8px; }
-        .result-card h3 { color: var(--gold); margin-bottom: 10px; }
-        .record-form { display: grid; grid-template-columns: repeat(4, 1fr) auto; gap: 10px; margin-top: 18px; }
-        .record-form input, .record-form select {
-            min-width: 0; background: rgba(255,255,255,0.06); color: #fff; border: 1px solid var(--line);
-            border-radius: 8px; padding: 11px 12px; outline: none;
-        }
-        .record-form select option { color: #101827; }
-        .mini-btn { border: 1px solid var(--gold); background: transparent; color: var(--gold); border-radius: 8px; padding: 10px 14px; cursor: pointer; font-weight: 800; }
-
-        .status-line { margin-top: 14px; color: var(--gold); min-height: 24px; }
-        @media (max-width: 900px) {
-            header { align-items: flex-start; gap: 14px; position: static; flex-direction: column; }
-            nav a { margin-left: 0; margin-right: 16px; display: inline-block; margin-top: 8px; }
-            .container { padding-top: 36px; }
-            h1 { font-size: 2.35em; }
-            .lab-hero, .recognition-grid, .database-layout, .preference-grid, .result-card { grid-template-columns: 1fr; }
-            .pattern-grid { grid-template-columns: 1fr; }
-            .scan-meta, .record-form { grid-template-columns: 1fr; }
-            .section-head { display: block; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>智绣实验室 | 阿热灵绣</title>
+<style>
+:root{--gold:#C5A059;--gold2:#F3D58B;--bg:#060B15;--panel:rgba(12,19,35,.88);--muted:#A0AEC0;--line:rgba(197,160,89,.28)}*{margin:0;padding:0;box-sizing:border-box}body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#060B15;color:#fff;line-height:1.6}body:before{content:"";position:fixed;inset:0;background:linear-gradient(rgba(6,11,21,.86),rgba(6,11,21,.96)),url('assets/images/backgrounds/background.jpg') center/cover fixed;z-index:-1}
+header{height:74px;display:flex;align-items:center;justify-content:space-between;padding:12px 6%;position:sticky;top:0;z-index:30;background:rgba(6,11,21,.88);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.09)}.logo{display:flex;align-items:center;gap:12px;color:var(--gold);text-decoration:none;font-weight:900;letter-spacing:2px}.logo img{width:54px;height:38px;object-fit:contain}nav a{color:var(--muted);text-decoration:none;margin-left:20px;font-size:.9em}nav a:hover,nav a.active{color:var(--gold2)}
+.hero{padding:72px 6% 34px;text-align:center}.eyebrow{color:var(--gold2);letter-spacing:6px;text-transform:uppercase;font-size:.78em;font-weight:900}.hero h1{font-size:clamp(2.4rem,6vw,5.2rem);margin:10px 0}.hero p{max-width:880px;margin:auto;color:rgba(255,255,255,.72)}
+.lab-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;padding:24px 6% 70px}.module{background:var(--panel);border:1px solid var(--line);border-radius:30px;padding:28px;min-height:720px;position:relative;overflow:hidden;box-shadow:0 28px 80px rgba(0,0,0,.35)}.module:before{content:"";position:absolute;inset:14px;border:1px solid rgba(243,213,139,.2);border-radius:24px;pointer-events:none}.module h2{font-size:2rem;margin:9px 0 12px}.module>p{color:var(--muted);margin-bottom:22px}.control-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}select,input,textarea{width:100%;padding:13px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.055);color:#fff;outline:none}textarea{min-height:92px;resize:vertical}.btn{border:0;border-radius:999px;padding:13px 24px;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#07101f;font-weight:900;cursor:pointer;box-shadow:0 15px 32px rgba(197,160,89,.25)}.ghost{background:transparent;color:var(--gold2);border:1px solid var(--line)}
+.print-stage,.scan-stage{height:330px;border-radius:24px;background:radial-gradient(circle at 50% 22%,rgba(197,160,89,.16),transparent 45%),#050a14;border:1px solid rgba(255,255,255,.08);position:relative;overflow:hidden;margin:22px 0}.paper{position:absolute;left:50%;top:32px;width:230px;height:230px;transform:translateX(-50%) translateY(-120%);background:#fbf6e8;border-radius:12px;box-shadow:0 24px 55px rgba(0,0,0,.45);overflow:hidden}.paper.printing{animation:paperDrop 3.2s cubic-bezier(.16,1,.3,1) forwards}.paper img{width:100%;height:100%;object-fit:cover;opacity:0}.paper.printing img{animation:revealPrint 2.4s steps(12) .6s forwards}.printer-slot{position:absolute;top:24px;left:50%;width:320px;height:34px;transform:translateX(-50%);border-radius:999px;background:linear-gradient(90deg,#060b15,#273246,#060b15);border:1px solid var(--line)}@keyframes paperDrop{0%{transform:translateX(-50%) translateY(-120%)}45%{transform:translateX(-50%) translateY(0)}100%{transform:translateX(-50%) translateY(28px)}}@keyframes revealPrint{from{clip-path:inset(0 0 100% 0);opacity:.2}to{clip-path:inset(0);opacity:1}}.compute-log{font-family:"SFMono-Regular",Consolas,monospace;font-size:.82em;color:#89f7c3;background:rgba(0,0,0,.22);border:1px solid rgba(137,247,195,.16);border-radius:16px;padding:14px;min-height:116px;white-space:pre-line}.progress{height:8px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden;margin:12px 0}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),#89f7c3);transition:width .45s}.scan-image{position:absolute;left:50%;top:48px;width:245px;height:245px;transform:translateX(-50%);border-radius:18px;overflow:hidden;border:1px solid var(--line);box-shadow:0 18px 45px rgba(0,0,0,.45)}.scan-image img{width:100%;height:100%;object-fit:cover}.scan-line{position:absolute;left:0;right:0;height:4px;background:linear-gradient(90deg,transparent,#89f7c3,transparent);box-shadow:0 0 25px #89f7c3;top:-10px;opacity:0}.scanning .scan-line{animation:scan 2.6s ease-in-out 2}.scan-grid{position:absolute;inset:0;background:linear-gradient(rgba(137,247,195,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(137,247,195,.12) 1px,transparent 1px);background-size:28px 28px;opacity:.3}@keyframes scan{0%{top:0;opacity:1}50%{top:100%;opacity:1}100%{top:0;opacity:.7}}.result-card{display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:center;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:13px;margin-top:14px;opacity:.5;transition:.4s}.result-card.active{opacity:1;border-color:var(--gold);transform:translateY(-4px)}.result-card img{width:96px;height:96px;object-fit:cover;border-radius:12px}.tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}.tags span{font-size:.72em;border:1px solid var(--line);border-radius:999px;padding:4px 8px;color:var(--muted)}.database-strip{padding:0 6% 80px}.database-strip h2{text-align:center;font-size:2.3rem;margin-bottom:22px}.mini-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.mini-grid img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:18px;border:1px solid rgba(255,255,255,.08)}@media(max-width:1000px){.lab-grid{grid-template-columns:1fr}.module{min-height:auto}.mini-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
 </head>
 <body>
-<header>
-    <a href="首页.html" class="logo">阿热灵绣</a>
-    <nav>
-        <a href="首页.html">首页</a>
-        <a href="项目介绍.html">项目介绍</a>
-        <a href="私人定制页面.html" style="color:var(--gold)">定制引擎</a>
-        <a href="购买页面.html">文创商城</a>
-    </nav>
-</header>
-
-<main class="container">
-    <section class="lab-hero">
-        <div class="hero-copy">
-            <div class="eyebrow">AIGC Pattern Intelligence</div>
-            <h1>让藏羌绣纹样从档案中被识别、调取与再生。</h1>
-            <p>本页为展示型前端黑箱：模拟纹样识别、分类入库、数据库调入调出、个人偏好匹配与新纹样生成，适合路演、答辩和产品概念演示。</p>
-            <div class="hero-actions">
-                <a class="btn" href="#recognition">演示识别入库</a>
-                <a class="btn ghost" href="#database">查看纹样库</a>
-            </div>
-        </div>
-        <div class="hero-visual">
-            <div class="scan-box">
-                <img src="pattern_ai_flower.png" alt="AI生成藏羌绣花云纹样">
-                <div class="scan-line"></div>
-            </div>
-            <div class="scan-meta">
-                <div class="metric"><strong>96.8%</strong><span>纹样识别置信度</span></div>
-                <div class="metric"><strong>4类</strong><span>图腾分类索引</span></div>
-                <div class="metric"><strong>12项</strong><span>可检索标签</span></div>
-            </div>
-        </div>
-    </section>
-
-    <section class="section" id="recognition">
-        <div class="section-head">
-            <div>
-                <div class="eyebrow">Recognition</div>
-                <h2>识别纹样并分类入库</h2>
-            </div>
-            <p>点击按钮即可模拟一次识别流程：上传样本、提取视觉特征、匹配纹样谱系，并生成可入库编号。</p>
-        </div>
-        <div class="recognition-grid">
-            <div class="upload-zone">
-                <div>
-                    <strong>待识别样本</strong>
-                    <p>模拟上传一张绣片照片，系统自动读取色彩、针法、构图和寓意标签。</p>
-                </div>
-                <img id="sampleImage" src="pattern_ai_mountain.png" alt="待识别纹样样本">
-                <button class="btn" onclick="runRecognition()">开始识别并入库</button>
-            </div>
-            <div class="panel">
-                <div class="pipeline">
-                    <div class="step"><b>01</b><div><strong>图像预处理</strong><br><span id="step1">等待样本上传</span></div><div class="confidence">待处理</div></div>
-                    <div class="step"><b>02</b><div><strong>纹样语义分类</strong><br><span id="step2">等待模型识别</span></div><div class="confidence" id="score2">--</div></div>
-                    <div class="step"><b>03</b><div><strong>自动生成入库档案</strong><br><span id="step3">等待归档</span></div><div class="confidence" id="score3">--</div></div>
-                    <div class="step"><b>04</b><div><strong>可调入调出</strong><br><span id="step4">等待授权索引</span></div><div class="confidence" id="score4">--</div></div>
-                </div>
-                <p class="status-line" id="recognitionStatus"></p>
-            </div>
-        </div>
-    </section>
-
-    <section class="section" id="database">
-        <div class="section-head">
-            <div>
-                <div class="eyebrow">Pattern Archive</div>
-                <h2>纹样数据库</h2>
-            </div>
-            <p>数据库以“纹样图、分类、寓意、适配产品、版权状态”为核心字段。点击卡片可调出档案，录入区可模拟新增条目。</p>
-        </div>
-        <div class="tabs" id="tabs"></div>
-        <div class="database-layout">
-            <div class="pattern-grid" id="patternGrid"></div>
-            <aside class="panel" id="patternDetail"></aside>
-        </div>
-        <div class="panel" style="margin-top:22px;">
-            <h3>录入新纹样</h3>
-            <div class="record-form">
-                <input id="newName" placeholder="纹样名称">
-                <select id="newCategory">
-                    <option>花草瑞纹</option>
-                    <option>山川守护</option>
-                    <option>水流丰收</option>
-                    <option>个性生成</option>
-                </select>
-                <input id="newMeaning" placeholder="寓意说明">
-                <input id="newProduct" placeholder="适配物品">
-                <button class="mini-btn" onclick="addPattern()">模拟录入</button>
-            </div>
-            <p class="status-line" id="recordStatus"></p>
-        </div>
-    </section>
-
-    <section class="section" id="preference">
-        <div class="section-head">
-            <div>
-                <div class="eyebrow">Preference Engine</div>
-                <h2>按个人爱好调取与生成</h2>
-            </div>
-            <p>每种能力各给一个可展示例子：调取已有纹样、调取已有物品、生成新的个性化纹样。</p>
-        </div>
-        <div class="preference-grid">
-            <div class="panel">
-                <div class="choice-grid">
-                    <button class="choice active" onclick="showPreference('pattern', this)"><strong>偏好：沉稳、金线、花草</strong><span>从数据库调取“花云团纹”。</span></button>
-                    <button class="choice" onclick="showPreference('product', this)"><strong>偏好：实用、包袋、通勤</strong><span>从商品库调取适配手包。</span></button>
-                    <button class="choice" onclick="showPreference('generate', this)"><strong>偏好：年轻、礼赠、现代</strong><span>生成“蝶榴新生”新纹样。</span></button>
-                </div>
-            </div>
-            <div class="result-card" id="preferenceResult"></div>
-        </div>
-    </section>
+<header><a href="index.html" class="logo"><img src="assets/images/brand/ar-logo-clear.svg" alt="阿热灵绣 logo"><span>阿热灵绣</span></a><nav><a href="index.html">首页</a><a href="项目介绍.html">项目背景</a><a href="纹样数据库.html">纹样数据库</a><a href="私人定制页面.html" class="active">定制引擎</a><a href="购买页面.html">文创商城</a></nav></header>
+<section class="hero"><div class="eyebrow">Zhixiu Interactive Engine</div><h1>先生成纹样，再识别入库</h1><p>左右各占一半：左侧模拟用户偏好生成纹样，右侧模拟扫描识别与数据库入库。动画过程会展示计算、打印、扫描和标签归档，不再直接跳出结果。</p></section>
+<main class="lab-grid">
+<section class="module">
+    <div class="eyebrow">01 Generate Pattern</div><h2>生成纹样</h2><p>选择寓意、色调与应用物品，系统会先进行语义拆解，再像打印纸一样慢慢输出纹样方案。</p>
+    <div class="control-row"><select id="meaning"><option>团圆祈福</option><option>山川守护</option><option>多福新生</option><option>丰收绵延</option></select><select id="tone"><option>金线沉稳</option><option>蓝金典雅</option><option>红金喜庆</option><option>绿金自然</option></select></div>
+    <textarea id="scene" placeholder="描述应用场景，例如：送给年轻游客的手机壳、研学伴手礼、节庆香囊……">年轻游客喜欢的手机壳和香囊，既现代又保留藏羌绣寓意。</textarea>
+    <button class="btn" onclick="generatePattern()">开始生成</button>
+    <div class="print-stage"><div class="printer-slot"></div><div class="paper" id="paper"><img id="generatedImg" src="assets/images/patterns/generated/pattern_04.svg" alt="生成纹样"></div></div>
+    <div class="progress"><span id="genProgress"></span></div><div class="compute-log" id="genLog">等待生成任务……</div>
+</section>
+<section class="module">
+    <div class="eyebrow">02 Recognize & Archive</div><h2>识别纹样入库</h2><p>把生成结果或已有样本送入扫描区，系统会逐步提取色彩、针法、构图和寓意标签，最后写入纹样数据库。</p>
+    <div class="control-row"><select id="sample"><option value="assets/images/patterns/generated/pattern_01.svg">嘉绒花云团纹</option><option value="assets/images/patterns/generated/pattern_02.svg">雪山守护纹</option><option value="assets/images/patterns/generated/pattern_03.svg">水流丰收纹</option><option value="assets/images/patterns/generated/pattern_04.svg">蝶榴新生纹</option></select><button class="btn ghost" onclick="useGenerated()">使用刚生成纹样</button></div>
+    <button class="btn" onclick="recognizePattern()">开始扫描识别</button>
+    <div class="scan-stage" id="scanStage"><div class="scan-image"><img id="scanImg" src="assets/images/patterns/generated/pattern_01.svg" alt="待识别纹样"><div class="scan-grid"></div><div class="scan-line"></div></div></div>
+    <div class="progress"><span id="scanProgress"></span></div><div class="compute-log" id="scanLog">等待扫描任务……</div>
+    <div class="result-card" id="resultCard"><img id="resultImg" src="assets/images/patterns/generated/pattern_01.svg" alt="识别结果"><div><strong id="resultTitle">AR-101 嘉绒花云团纹</strong><p id="resultDesc">完成扫描后将显示置信度、标签和入库编号。</p><div class="tags"><span>待识别</span><span>待入库</span></div></div></div>
+</section>
 </main>
-
+<section class="database-strip"><h2>实验室可调取纹样</h2><div class="mini-grid"><img src="assets/images/patterns/generated/pattern_05.svg" alt="羌笛回旋纹"><img src="assets/images/patterns/generated/pattern_06.svg" alt="金线牡丹纹"><img src="assets/images/patterns/generated/pattern_07.svg" alt="羊角护佑纹"><img src="assets/images/patterns/generated/pattern_08.svg" alt="星河织带纹"></div></section>
 <script>
-    const patterns = [
-        { id: "AR-001", name: "嘉绒花云团纹", category: "花草瑞纹", img: "pattern_ai_flower.png", meaning: "花开团圆、云气流转，适合礼赠与服饰主视觉。", product: "文化衫、丝巾、书签", tags: ["金线", "花草", "团花", "AIGC"] },
-        { id: "AR-002", name: "雪山守护纹", category: "山川守护", img: "pattern_ai_mountain.png", meaning: "山形与守护兽角构成稳定中轴，表达庇佑与力量。", product: "手包、胸针、授权图案", tags: ["山形", "守护", "几何", "高定"] },
-        { id: "AR-003", name: "水流丰收纹", category: "水流丰收", img: "pattern_ai_river.png", meaning: "河流、谷穗与种籽组合，象征土地丰饶与生活绵延。", product: "研学材料、香囊、文创包装", tags: ["水纹", "丰收", "研学", "包装"] },
-        { id: "AR-004", name: "蝶榴新生纹", category: "个性生成", img: "pattern_ai_butterfly.png", meaning: "蝴蝶与石榴寓意新生、多福和年轻化表达。", product: "手机壳、耳机壳、礼盒", tags: ["生成", "礼赠", "年轻", "数码"] }
-    ];
-    let activeCategory = "全部";
-    let activePattern = patterns[0];
-
-    function renderTabs() {
-        const cats = ["全部", ...new Set(patterns.map(p => p.category))];
-        document.getElementById("tabs").innerHTML = cats.map(cat => `<button class="tab ${cat === activeCategory ? "active" : ""}" onclick="setCategory('${cat}')">${cat}</button>`).join("");
-    }
-    function setCategory(cat) { activeCategory = cat; renderDatabase(); }
-    function renderDatabase() {
-        renderTabs();
-        const list = activeCategory === "全部" ? patterns : patterns.filter(p => p.category === activeCategory);
-        document.getElementById("patternGrid").innerHTML = list.map(p => `
-            <article class="pattern-card ${p.id === activePattern.id ? "active" : ""}" onclick="selectPattern('${p.id}')">
-                <img src="${p.img}" alt="${p.name}">
-                <div><h3>${p.name}</h3><p>${p.id} · ${p.category}</p></div>
-            </article>
-        `).join("");
-        renderDetail();
-    }
-    function selectPattern(id) {
-        activePattern = patterns.find(p => p.id === id);
-        renderDatabase();
-    }
-    function renderDetail() {
-        document.getElementById("patternDetail").innerHTML = `
-            <img class="detail-img" src="${activePattern.img}" alt="${activePattern.name}">
-            <h3>${activePattern.name}</h3>
-            <div class="kv"><span>档案编号</span><strong>${activePattern.id}</strong></div>
-            <div class="kv"><span>分类</span><strong>${activePattern.category}</strong></div>
-            <div class="kv"><span>适配物品</span><strong>${activePattern.product}</strong></div>
-            <div class="kv"><span>版权状态</span><strong>已确权，可授权调用</strong></div>
-            <p style="margin-top:14px;">${activePattern.meaning}</p>
-            <div class="tag-row">${activePattern.tags.map(t => `<span class="small-tag">${t}</span>`).join("")}</div>
-            <button class="mini-btn" onclick="callPattern()">调出纹样</button>
-        `;
-    }
-    function callPattern() {
-        document.getElementById("recordStatus").textContent = `已调出 ${activePattern.name}，可用于 ${activePattern.product}。`;
-        document.getElementById("patternDetail").scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-    function runRecognition() {
-        document.getElementById("step1").textContent = "已完成边缘增强、色彩抽样与针脚纹理读取";
-        document.getElementById("step2").textContent = "识别为山川守护类，匹配雪山、守护角、几何中轴";
-        document.getElementById("step3").textContent = "生成编号 AR-002，写入寓意、标签与适配物品";
-        document.getElementById("step4").textContent = "进入版权索引，可在数据库中调入调出";
-        document.getElementById("score2").textContent = "94.6%";
-        document.getElementById("score3").textContent = "AR-002";
-        document.getElementById("score4").textContent = "可调用";
-        document.getElementById("recognitionStatus").textContent = "识别完成：雪山守护纹已分类入库。";
-        activePattern = patterns[1];
-        activeCategory = "山川守护";
-        renderDatabase();
-    }
-    function addPattern() {
-        const name = document.getElementById("newName").value.trim() || "新录入示例纹样";
-        const category = document.getElementById("newCategory").value;
-        const meaning = document.getElementById("newMeaning").value.trim() || "由前端模拟录入，待传承人复核寓意与针法。";
-        const product = document.getElementById("newProduct").value.trim() || "文化衫、香囊";
-        const item = { id: `AR-${String(patterns.length + 1).padStart(3, "0")}`, name, category, img: "pattern_ai_butterfly.png", meaning, product, tags: ["新录入", "待复核", "展示"] };
-        patterns.push(item);
-        activePattern = item;
-        activeCategory = category;
-        renderDatabase();
-        document.getElementById("recordStatus").textContent = `${item.id} 已模拟写入数据库，可立即调出展示。`;
-    }
-    function showPreference(type, el) {
-        document.querySelectorAll(".choice").forEach(btn => btn.classList.remove("active"));
-        el.classList.add("active");
-        const data = {
-            pattern: { img: "pattern_ai_flower.png", title: "调取已有纹样：嘉绒花云团纹", body: "系统根据“沉稳、金线、花草”的偏好，从纹样库调出 AR-001，并建议用于文化衫与丝巾主视觉。", meta: "来源：纹样数据库" },
-            product: { img: "creative_bag_1.jpg", title: "调取已有物品：嘉绒精绣艺术手包", body: "系统根据“实用、包袋、通勤”的偏好，从商品库调出手包，并匹配雪山守护纹作为定制方案。", meta: "参考价：¥398" },
-            generate: { img: "pattern_ai_butterfly.png", title: "生成新纹样：蝶榴新生纹", body: "系统根据“年轻、礼赠、现代”的偏好，生成兼具蝴蝶与石榴寓意的新纹样，可用于手机壳、耳机壳与礼盒。", meta: "状态：AI 生成待复核" }
-        }[type];
-        document.getElementById("preferenceResult").innerHTML = `
-            <img src="${data.img}" alt="${data.title}">
-            <div><h3>${data.title}</h3><p>${data.body}</p><div class="tag-row"><span class="small-tag">${data.meta}</span><span class="small-tag">可导入方案</span></div><button class="mini-btn" onclick="document.getElementById('recordStatus').textContent='已加入展示方案：${data.title}'">加入方案</button></div>
-        `;
-    }
-    renderDatabase();
-    showPreference("pattern", document.querySelector(".choice"));
+const generated = ['assets/images/patterns/generated/pattern_04.svg','assets/images/patterns/generated/pattern_06.svg','assets/images/patterns/generated/pattern_12.svg','assets/images/patterns/generated/pattern_15.svg']; let latest = generated[0];
+function runSteps(logEl, progressEl, steps, done){ let i=0; logEl.textContent=''; progressEl.style.width='0%'; const timer=setInterval(()=>{ logEl.textContent += `> ${steps[i]}\n`; progressEl.style.width = `${Math.round((i+1)/steps.length*100)}%`; i++; if(i>=steps.length){ clearInterval(timer); setTimeout(done,450); } },620); }
+function generatePattern(){ const idx = Math.floor(Math.random()*generated.length); latest = generated[idx]; const paper=document.getElementById('paper'); paper.classList.remove('printing'); void paper.offsetWidth; document.getElementById('generatedImg').src=latest; runSteps(document.getElementById('genLog'),document.getElementById('genProgress'),['读取寓意词与应用场景','拆解藏羌绣图腾语义','匹配色彩与针法约束','生成边框与主体纹样','输出可入库 SVG 图稿'],()=>{ paper.classList.add('printing'); }); }
+function useGenerated(){ document.getElementById('sample').value = latest; document.getElementById('scanImg').src = latest; }
+function recognizePattern(){ const sample=document.getElementById('sample').value; document.getElementById('scanImg').src=sample; document.getElementById('resultImg').src=sample; const stage=document.getElementById('scanStage'); stage.classList.remove('scanning'); void stage.offsetWidth; stage.classList.add('scanning'); document.getElementById('resultCard').classList.remove('active'); runSteps(document.getElementById('scanLog'),document.getElementById('scanProgress'),['启动高精度扫描光栅','提取主色：金线 / 蓝底 / 红底','识别针法：盘金绣、锁边绣、彩线绣','匹配数据库近邻纹样','生成 AR-LAB 入库编号'],()=>{ document.getElementById('resultTitle').textContent='AR-LAB 新纹样已识别入库'; document.getElementById('resultDesc').textContent='置信度 96.8%，标签：生成纹样、可授权、适合文创开发。'; document.getElementById('resultCard').classList.add('active'); }); }
+generatePattern();
 </script>
 </body>
 </html>
