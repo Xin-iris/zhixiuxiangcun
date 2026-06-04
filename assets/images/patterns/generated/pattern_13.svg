@@ -1,6 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="AR-113 飞鸟归巢纹">
-<defs><filter id="glow"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
-<rect width="512" height="512" fill="#050914"/><rect x="18" y="18" width="476" height="476" rx="38" fill="#07101f" stroke="#e6c36e" stroke-width="7"/><rect x="42" y="42" width="428" height="428" rx="28" fill="none" stroke="#d75f52" stroke-width="2" opacity=".45"/><path d="M256 68 C120 130, 392 372, 256 444" fill="none" stroke="#d75f52" stroke-width="2" opacity=".16" transform="rotate(0 256 256)"/><path d="M256 68 C120 175, 317 346, 256 444" fill="none" stroke="#d75f52" stroke-width="2" opacity=".16" transform="rotate(45 256 256)"/><path d="M256 68 C120 220, 392 320, 256 444" fill="none" stroke="#d75f52" stroke-width="2" opacity=".16" transform="rotate(90 256 256)"/><path d="M256 68 C120 160, 317 294, 256 444" fill="none" stroke="#d75f52" stroke-width="2" opacity=".16" transform="rotate(135 256 256)"/><path d="M256 68 C120 205, 392 372, 256 444" fill="none" stroke="#d75f52" stroke-width="2" opacity=".16" transform="rotate(180 256 256)"/><path d="M256 68 C120 145, 317 346, 256 444" fill="none" stroke="#d75f52" stroke-width="2" opacity=".16" transform="rotate(225 256 256)"/><path d="M256 68 C120 190, 392 320, 256 444" fill="none" stroke="#d75f52" stroke-width="2" opacity=".16" transform="rotate(270 256 256)"/><path d="M256 68 C120 130, 317 294, 256 444" fill="none" stroke="#d75f52" stroke-width="2" opacity=".16" transform="rotate(315 256 256)"/><path d="M256 266 C160 112, 78 152, 116 248 C148 326, 216 308, 256 266Z" fill="none" stroke="#e6c36e" stroke-width="11"/><path d="M256 266 C352 112, 434 152, 396 248 C364 326, 296 308, 256 266Z" fill="none" stroke="#e6c36e" stroke-width="11"/><path d="M256 122v268" stroke="#d75f52" stroke-width="14" stroke-linecap="round"/>
-<circle cx="256" cy="256" r="9" fill="#d75f52" filter="url(#glow)"/>
-<text x="256" y="466" text-anchor="middle" fill="#f6e8be" font-family="serif" font-size="26" letter-spacing="3">AR-113</text>
+ <defs>
+  <filter id="thread" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="8" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="1.2"/></filter>
+  <linearGradient id="silk" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#07101f"/><stop offset=".55" stop-color="#101a2e"/><stop offset="1" stop-color="#050914"/></linearGradient>
+  <linearGradient id="gold" x1="0" x2="1"><stop stop-color="#e4c36e"/><stop offset=".5" stop-color="#fff1b8"/><stop offset="1" stop-color="#e4c36e"/></linearGradient>
+  <pattern id="stitch" width="18" height="18" patternUnits="userSpaceOnUse"><path d="M1 9h16" stroke="rgba(255,255,255,.08)" stroke-width="1"/><path d="M9 1v16" stroke="rgba(197,160,89,.08)" stroke-width="1"/></pattern>
+ </defs>
+ <rect width="512" height="512" rx="42" fill="url(#silk)"/>
+ <rect width="512" height="512" rx="42" fill="url(#stitch)" opacity=".75"/>
+ <rect x="20" y="20" width="472" height="472" rx="34" fill="none" stroke="url(#gold)" stroke-width="6"/>
+ <rect x="42" y="42" width="428" height="428" rx="28" fill="none" stroke="#38627e" stroke-width="2" opacity=".58"/>
+ <path d="M72 84h368M72 428h368M84 72v368M428 72v368" stroke="#e4c36e" stroke-width="3" stroke-linecap="round" opacity=".32"/>
+ <text x="256" y="462" text-anchor="middle" fill="#f6e8be" font-family="serif" font-size="24" letter-spacing="3">AR-113</text>
+ <text x="256" y="488" text-anchor="middle" fill="#e4c36e" font-family="serif" font-size="15" letter-spacing="2">飞鸟归巢纹</text>
+ <g><g opacity=".18" stroke="#89f7c3" stroke-width="1"><path d="M96 256h320M256 96v320"/><circle cx="256" cy="256" r="150" fill="none"/><circle cx="256" cy="256" r="92" fill="none"/></g>
+ <path d="M112 258c78-66 138-48 178 12 48-72 116-64 158-14" fill="none" stroke="url(#gold)" stroke-width="16" stroke-linecap="round" filter="url(#thread)"/>
+ <path d="M170 332c56 28 116 28 172 0" fill="none" stroke="#38627e" stroke-width="11" stroke-linecap="round"/></g>
 </svg>
