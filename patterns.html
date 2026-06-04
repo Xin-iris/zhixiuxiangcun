@@ -406,7 +406,7 @@
       <span>Embroidery Pattern Archive</span>
       <h1>纹样数据库</h1>
       <p>
-        收录 generated
+        直接罗列 generated
         文件夹中的正式纹样，可通过纹样种类、寓意、主色调、工艺特点筛选，也可以直接搜索纹样代码或名称。
       </p>
     </section>
@@ -430,7 +430,7 @@
           <div class="chips" id="craftFilters"></div>
         </div>
         <p class="sync-note" id="syncNote">
-          已载入 generated 文件夹中的正式纹样。
+          纹样已经直接写入页面，不依赖自动同步。
         </p>
       </aside>
       <section>
@@ -448,10 +448,116 @@
         <div class="detail" id="patternDetail"></div>
       </section>
     </main>
-    <script src="assets/js/pattern-manifest.js"></script>
     <script>
-      const uploadedPatternFiles = window.UPLOADED_PATTERN_FILES || [];
-      let patterns = [];
+      const patternCatalog = [
+        {
+          name: "八宝连绵纹.png",
+          url: "assets/images/patterns/generated/八宝连绵纹.png",
+          type: "吉祥符号",
+          meaning: "福运绵长",
+          color: "多彩",
+          craft: "彩线绣",
+        },
+        {
+          name: "凤羽吉祥纹.png",
+          url: "assets/images/patterns/generated/凤羽吉祥纹.png",
+          type: "动物灵兽",
+          meaning: "吉祥如意",
+          color: "红金",
+          craft: "盘金绣",
+        },
+        {
+          name: "团结吉祥纹.png",
+          url: "assets/images/patterns/generated/团结吉祥纹.png",
+          type: "吉祥符号",
+          meaning: "团结和合",
+          color: "多彩",
+          craft: "彩线绣",
+        },
+        {
+          name: "富贵牡丹纹.png",
+          url: "assets/images/patterns/generated/富贵牡丹纹.png",
+          type: "花卉植物",
+          meaning: "富贵吉祥",
+          color: "红金",
+          craft: "盘金绣",
+        },
+        {
+          name: "山水纳福纹.png",
+          url: "assets/images/patterns/generated/山水纳福纹.png",
+          type: "自然山水",
+          meaning: "纳福安康",
+          color: "蓝绿",
+          craft: "平针绣",
+        },
+        {
+          name: "山河牛角纹.png",
+          url: "assets/images/patterns/generated/山河牛角纹.png",
+          type: "动物灵兽",
+          meaning: "守护力量",
+          color: "蓝金",
+          craft: "锁边绣",
+        },
+        {
+          name: "星辰织带纹.png",
+          url: "assets/images/patterns/generated/星辰织带纹.png",
+          type: "自然山水",
+          meaning: "光明希望",
+          color: "蓝金",
+          craft: "挑花绣",
+        },
+        {
+          name: "祥云瑞气纹.png",
+          url: "assets/images/patterns/generated/祥云瑞气纹.png",
+          type: "吉祥符号",
+          meaning: "祥瑞纳福",
+          color: "金色",
+          craft: "盘金绣",
+        },
+        {
+          name: "羊角守护纹.png",
+          url: "assets/images/patterns/generated/羊角守护纹.png",
+          type: "动物灵兽",
+          meaning: "守护平安",
+          color: "红金",
+          craft: "锁边绣",
+        },
+        {
+          name: "莲花宝相纹.png",
+          url: "assets/images/patterns/generated/莲花宝相纹.png",
+          type: "花卉植物",
+          meaning: "清净圆满",
+          color: "蓝金",
+          craft: "平针绣",
+        },
+        {
+          name: "蝴蝶石榴纹.png",
+          url: "assets/images/patterns/generated/蝴蝶石榴纹.png",
+          type: "花卉植物",
+          meaning: "多福新生",
+          color: "红色",
+          craft: "彩线绣",
+        },
+        {
+          name: "锦绣团花纹.png",
+          url: "assets/images/patterns/generated/锦绣团花纹.png",
+          type: "花卉植物",
+          meaning: "团圆美满",
+          color: "多彩",
+          craft: "彩线绣",
+        },
+        {
+          name: "鹿鸣安康纹.png",
+          url: "assets/images/patterns/generated/鹿鸣安康纹.png",
+          type: "动物灵兽",
+          meaning: "安康长乐",
+          color: "蓝绿",
+          craft: "平针绣",
+        },
+      ];
+      const RAW_PATTERN_BASE =
+        "https://raw.githubusercontent.com/Xin-iris/zhixiuxiangcun/main/assets/images/patterns/generated/";
+      let patterns = patternCatalog.map(toPattern);
       const state = {
         type: "全部",
         meaning: "全部",
@@ -517,6 +623,14 @@
               .includes(query))
         );
       }
+      function useRawFallback(image, fileName) {
+        if (image.dataset.rawFallback) {
+          image.closest(".card")?.classList.add("image-unavailable");
+          return;
+        }
+        image.dataset.rawFallback = "true";
+        image.src = `${RAW_PATTERN_BASE}${encodeURIComponent(fileName)}`;
+      }
       function renderPatterns() {
         const list = patterns.filter(match);
         document.getElementById("resultCount").textContent =
@@ -525,7 +639,7 @@
           list
             .map(
               (pattern) =>
-                `<article class="card" data-pattern-code="${pattern.code}" tabindex="0"><img src="${escapeHtml(pattern.img)}" alt="${escapeHtml(pattern.name)}" loading="lazy"><div class="card-body"><div class="code">${pattern.code}</div><h3>${escapeHtml(pattern.name)}</h3><div class="meta"><span>${escapeHtml(pattern.type)}</span><span>${escapeHtml(pattern.meaning)}</span><span>${escapeHtml(pattern.color)}</span><span>${escapeHtml(pattern.craft)}</span></div></div></article>`,
+                `<article class="card" data-pattern-code="${pattern.code}" tabindex="0"><img src="${escapeHtml(pattern.img)}" alt="${escapeHtml(pattern.name)}" loading="lazy" onerror="useRawFallback(this, '${escapeHtml(pattern.fileName)}')"><div class="card-body"><div class="code">${pattern.code}</div><h3>${escapeHtml(pattern.name)}</h3><div class="meta"><span>${escapeHtml(pattern.type)}</span><span>${escapeHtml(pattern.meaning)}</span><span>${escapeHtml(pattern.color)}</span><span>${escapeHtml(pattern.craft)}</span></div></div></article>`,
             )
             .join("") ||
           '<div class="empty">暂无匹配纹样，请放宽筛选条件。</div>';
@@ -536,7 +650,7 @@
         const pattern = patterns.find((item) => item.code === code);
         if (!pattern) return;
         document.getElementById("patternDetail").innerHTML =
-          `<img src="${escapeHtml(pattern.img)}" alt="${escapeHtml(pattern.name)}"><div><div class="code">${pattern.code}</div><h2>${escapeHtml(pattern.name)}</h2><p>该名称直接取自你上传的文件 <strong>${escapeHtml(pattern.fileName)}</strong>，网页不会再使用旧纹样名称替代。</p><p><strong>种类：</strong>${escapeHtml(pattern.type)}　<strong>寓意：</strong>${escapeHtml(pattern.meaning)}　<strong>色调：</strong>${escapeHtml(pattern.color)}　<strong>工艺：</strong>${escapeHtml(pattern.craft)}</p><p><strong>产品建议：</strong>文化衫、丝巾、书签、香囊、礼盒包装、数字授权。</p></div>`;
+          `<img src="${escapeHtml(pattern.img)}" alt="${escapeHtml(pattern.name)}" onerror="useRawFallback(this, '${escapeHtml(pattern.fileName)}')"><div><div class="code">${pattern.code}</div><h2>${escapeHtml(pattern.name)}</h2><p>该名称直接取自你上传的文件 <strong>${escapeHtml(pattern.fileName)}</strong>，网页不会再使用旧纹样名称替代。</p><p><strong>种类：</strong>${escapeHtml(pattern.type)}　<strong>寓意：</strong>${escapeHtml(pattern.meaning)}　<strong>色调：</strong>${escapeHtml(pattern.color)}　<strong>工艺：</strong>${escapeHtml(pattern.craft)}</p><p><strong>产品建议：</strong>文化衫、丝巾、书签、香囊、礼盒包装、数字授权。</p></div>`;
       }
       function renderAll() {
         renderChips("typeFilters", "type");
@@ -544,12 +658,6 @@
         renderChips("colorFilters", "color");
         renderChips("craftFilters", "craft");
         renderPatterns();
-      }
-      function loadUploadedPatterns() {
-        patterns = uploadedPatternFiles.map(toPattern);
-        document.getElementById("syncNote").textContent =
-          `已载入 ${patterns.length} 个正式纹样，可组合使用多项筛选。`;
-        renderAll();
       }
       document
         .getElementById("searchInput")
@@ -564,7 +672,9 @@
           const card = event.target.closest("[data-pattern-code]");
           if (card) showDetail(card.dataset.patternCode);
         });
-      loadUploadedPatterns();
+      document.getElementById("syncNote").textContent =
+        `已直接载入 ${patterns.length} 个纹样，可组合使用多项筛选。`;
+      renderAll();
     </script>
     <script>
       const navigationBar = document.querySelector("header");
