@@ -1,0 +1,833 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>阿热灵绣 | 智绣乡村 · 活态传承</title>
+    <style>
+      :root {
+        --gold: #c5a059;
+        --gold2: #f3d58b;
+        --bg-dark: #060b15;
+        --ink: #ffffff;
+        --muted: #a0aec0;
+        --panel: rgba(10, 17, 31, 0.78);
+        --line: rgba(197, 160, 89, 0.28);
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        background: #060b15 url("assets/images/backgrounds/background.jpg")
+          center/cover fixed;
+        color: var(--ink);
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background:
+          radial-gradient(
+            circle at 18% 12%,
+            rgba(197, 160, 89, 0.2),
+            transparent 28%
+          ),
+          linear-gradient(180deg, rgba(6, 11, 21, 0.74), rgba(6, 11, 21, 0.92));
+        z-index: -1;
+      }
+      .page-transition {
+        animation: pageOut 0.42s ease forwards;
+      }
+      @keyframes pageOut {
+        to {
+          opacity: 0.08;
+          transform: scale(0.985);
+          filter: blur(12px);
+        }
+      }
+      header {
+        min-height: 80px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 5% 12px 3.8%;
+        position: sticky;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        background: linear-gradient(
+          180deg,
+          rgba(6, 11, 21, 0.78),
+          rgba(6, 11, 21, 0.48)
+        );
+        backdrop-filter: blur(22px) saturate(135%);
+        border-bottom: 1px solid rgba(243, 213, 139, 0.12);
+        box-shadow: 0 12px 38px rgba(0, 0, 0, 0.12);
+        transition:
+          background 0.35s ease,
+          box-shadow 0.35s ease,
+          border-color 0.35s ease;
+      }
+      header.is-scrolled {
+        background: linear-gradient(
+          180deg,
+          rgba(6, 11, 21, 0.9),
+          rgba(6, 11, 21, 0.7)
+        );
+        border-bottom-color: rgba(243, 213, 139, 0.2);
+        box-shadow: 0 18px 52px rgba(0, 0, 0, 0.28);
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        color: var(--gold);
+        text-decoration: none;
+        font-size: 1.18rem;
+        font-weight: 900;
+        letter-spacing: 2.5px;
+        white-space: nowrap;
+      }
+      .logo img {
+        display: block;
+        width: 82px;
+        height: 56px;
+        object-fit: contain;
+      }
+      nav a {
+        color: var(--muted);
+        text-decoration: none;
+        margin-left: 22px;
+        font-size: 0.92rem;
+        transition: 0.3s;
+      }
+      nav a:hover,
+      nav a.active {
+        color: var(--gold2);
+      }
+      .hero {
+        min-height: 68vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 110px 6% 45px;
+      }
+      .hero-logo {
+        display: block;
+        width: clamp(260px, 28vw, 390px);
+        max-width: 82vw;
+        height: auto;
+        margin: 0 auto 24px;
+        object-fit: contain;
+        transform: translateX(clamp(4px, 0.8vw, 14px));
+      }
+      .hero h1 {
+        font-size: clamp(3.2rem, 8vw, 6.5rem);
+        font-weight: 900;
+        letter-spacing: 8px;
+        text-shadow: 0 20px 60px rgba(0, 0, 0, 0.72);
+      }
+      .hero p {
+        color: var(--gold2);
+        letter-spacing: 9px;
+        font-weight: 800;
+        margin-top: 8px;
+      }
+      .hero .sub {
+        max-width: 760px;
+        margin-top: 22px;
+        color: rgba(255, 255, 255, 0.74);
+        letter-spacing: 1px;
+      }
+      .section-title {
+        text-align: center;
+        margin-bottom: 34px;
+      }
+      .section-title span {
+        color: var(--gold2);
+        letter-spacing: 6px;
+        text-transform: uppercase;
+        font-size: 0.78em;
+        font-weight: 900;
+      }
+      .section-title h2 {
+        font-size: clamp(2rem, 4vw, 3.2rem);
+        margin-top: 10px;
+      }
+      .portals {
+        padding: 24px 6% 84px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 34px;
+      }
+      .portal-card {
+        min-height: 500px;
+        border-radius: 26px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 48px;
+        text-decoration: none;
+        color: #fff;
+        isolation: isolate;
+        border: 1px solid var(--line);
+        box-shadow: 0 30px 90px rgba(0, 0, 0, 0.45);
+        transform-style: preserve-3d;
+        transition:
+          transform 0.72s cubic-bezier(0.16, 1, 0.3, 1),
+          border-color 0.5s,
+          box-shadow 0.5s;
+      }
+      .portal-card::before {
+        content: "";
+        position: absolute;
+        inset: 14px;
+        border: 1px solid rgba(243, 213, 139, 0.42);
+        border-radius: 20px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(197, 160, 89, 0.14),
+          transparent
+        );
+        mask:
+          linear-gradient(#000, #000) content-box,
+          linear-gradient(#000, #000);
+        pointer-events: none;
+      }
+      .portal-card::after {
+        content: "";
+        position: absolute;
+        inset: -25%;
+        background: radial-gradient(
+          circle at var(--x, 50%) var(--y, 50%),
+          rgba(243, 213, 139, 0.3),
+          transparent 24%
+        );
+        opacity: 0;
+        transition: 0.5s;
+        z-index: -1;
+      }
+      .portal-card:hover {
+        transform: translateY(-16px) scale(1.018);
+        border-color: rgba(243, 213, 139, 0.86);
+        box-shadow: 0 42px 120px rgba(197, 160, 89, 0.22);
+      }
+      .portal-card:hover::after {
+        opacity: 1;
+      }
+      .portal-card h2 {
+        font-size: clamp(2.2rem, 4vw, 4rem);
+        line-height: 1.08;
+        margin-bottom: 18px;
+      }
+      .portal-card p {
+        max-width: 540px;
+        color: rgba(255, 255, 255, 0.78);
+        margin-bottom: 24px;
+      }
+      .btn-action {
+        width: max-content;
+        padding: 13px 34px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--gold2), var(--gold));
+        color: #06101e;
+        font-weight: 900;
+        box-shadow: 0 14px 32px rgba(197, 160, 89, 0.28);
+      }
+      .p-lab {
+        background:
+          linear-gradient(to top, rgba(6, 11, 21, 0.95), rgba(6, 11, 21, 0.2)),
+          url("assets/images/heritage/lab_portal.jpg") center/cover;
+      }
+      .p-shop {
+        background:
+          linear-gradient(to top, rgba(6, 11, 21, 0.95), rgba(6, 11, 21, 0.2)),
+          url("assets/images/heritage/heritage_work.jpg") center/cover;
+      }
+      .portal-mark {
+        position: absolute;
+        top: 26px;
+        right: 30px;
+        width: 118px;
+        height: 118px;
+        opacity: 0.48;
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        filter: drop-shadow(0 0 22px rgba(197, 160, 89, 0.4));
+      }
+      .activities {
+        padding: 78px 0;
+        background: linear-gradient(
+          180deg,
+          rgba(6, 11, 21, 0.3),
+          rgba(6, 11, 21, 0.86)
+        );
+        overflow: hidden;
+      }
+      .activity-rail {
+        display: flex;
+        width: max-content;
+        gap: 24px;
+        animation: scrollRail 34s linear infinite;
+        padding: 10px 6% 28px;
+      }
+      .activity-rail:hover {
+        animation-play-state: paused;
+      }
+      @keyframes scrollRail {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(-50%);
+        }
+      }
+      .activity-card {
+        width: 430px;
+        height: 380px;
+        border-radius: 24px;
+        overflow: hidden;
+        position: relative;
+        flex: 0 0 auto;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.38);
+        transition: 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+        background: #111;
+      }
+      .activity-card:hover {
+        width: 520px;
+        transform: translateY(-12px) scale(1.04);
+        border-color: rgba(243, 213, 139, 0.85);
+        z-index: 2;
+      }
+      .activity-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to top,
+          rgba(6, 11, 21, 0.92),
+          rgba(6, 11, 21, 0.08)
+        );
+      }
+      .activity-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: scale(1.04);
+        filter: saturate(1.12) contrast(1.05);
+        transition: 0.5s;
+      }
+      .activity-card:hover img {
+        transform: scale(1.14);
+        filter: saturate(1.25) contrast(1.12);
+      }
+      .activity-copy {
+        position: absolute;
+        left: 28px;
+        right: 28px;
+        bottom: 28px;
+        z-index: 2;
+      }
+      .activity-copy h4 {
+        color: var(--gold2);
+        font-size: 1.35rem;
+        margin-bottom: 9px;
+      }
+      .activity-copy p {
+        color: rgba(255, 255, 255, 0.76);
+        font-size: 0.94rem;
+      }
+      .lab-showcase {
+        padding: 90px 6%;
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 34px;
+      }
+      .lab-copy,
+      .pattern-preview {
+        background: var(--panel);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 24px;
+        padding: 34px;
+      }
+      .lab-copy {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px;
+        background:
+          radial-gradient(
+            circle at 15% 12%,
+            rgba(197, 160, 89, 0.14),
+            transparent 32%
+          ),
+          var(--panel);
+      }
+      .lab-story {
+        margin: 4px 0 22px;
+        padding: 20px 22px;
+        border-left: 2px solid var(--gold);
+        border-radius: 0 16px 16px 0;
+        background: rgba(255, 255, 255, 0.035);
+        color: rgba(255, 255, 255, 0.78);
+        line-height: 1.9;
+      }
+      .lab-metrics {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin: 22px 0;
+      }
+      .lab-metric {
+        padding: 17px 12px;
+        border: 1px solid rgba(197, 160, 89, 0.2);
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.035);
+      }
+      .lab-metric strong,
+      .lab-metric span {
+        display: block;
+      }
+      .lab-metric strong {
+        color: var(--gold2);
+        font-size: 1.05rem;
+        margin-bottom: 4px;
+      }
+      .lab-metric span {
+        color: var(--muted);
+        font-size: 0.78rem;
+      }
+      .lab-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 12px;
+      }
+      .lab-actions a {
+        padding: 12px 20px;
+        border: 1px solid rgba(197, 160, 89, 0.42);
+        border-radius: 999px;
+        color: var(--gold2);
+        text-decoration: none;
+        font-weight: 800;
+        transition: 0.3s;
+      }
+      .lab-actions a:first-child,
+      .lab-actions a:hover {
+        color: #07101f;
+        background: linear-gradient(135deg, var(--gold2), var(--gold));
+      }
+      .eyebrow {
+        color: var(--gold2);
+        letter-spacing: 4px;
+        font-size: 0.78em;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+      .lab-copy h2 {
+        font-size: 2.35rem;
+        margin: 14px 0;
+      }
+      .lab-copy p {
+        color: var(--muted);
+        margin-bottom: 22px;
+      }
+      .lab-step {
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 14px 0;
+        color: var(--muted);
+      }
+      .pattern-preview {
+        display: grid;
+        grid-template-columns: 1.25fr 0.75fr;
+        grid-template-rows: repeat(2, minmax(150px, 1fr));
+        gap: 16px;
+        padding: 18px;
+      }
+      .pattern-preview a:first-child {
+        grid-row: 1 / 3;
+      }
+      .pattern-preview a {
+        text-decoration: none;
+        color: #fff;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        transition: 0.35s;
+      }
+      .pattern-preview a:hover {
+        transform: translateY(-8px);
+        border-color: var(--gold);
+      }
+      .pattern-preview img {
+        width: 100%;
+        height: 100%;
+        min-height: 150px;
+        object-fit: cover;
+        display: block;
+        filter: saturate(1.08) contrast(1.04);
+        transition: 0.45s ease;
+      }
+      .pattern-preview a:first-child img {
+        min-height: 332px;
+      }
+      .pattern-preview a:hover img {
+        transform: scale(1.045);
+      }
+      .pattern-preview b {
+        display: block;
+        padding: 12px;
+        color: var(--gold2);
+      }
+      .resources {
+        padding: 30px 6% 90px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+      .res-card {
+        display: flex;
+        gap: 22px;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 22px;
+        padding: 20px;
+      }
+      .res-card img {
+        width: 170px;
+        height: 130px;
+        object-fit: cover;
+        border-radius: 14px;
+      }
+      footer {
+        text-align: center;
+        padding: 50px 6%;
+        color: rgba(255, 255, 255, 0.55);
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      @media (max-width: 900px) {
+        .portals,
+        .lab-showcase,
+        .resources {
+          grid-template-columns: 1fr;
+        }
+        nav a {
+          margin-left: 10px;
+        }
+        .portal-card {
+          min-height: 420px;
+        }
+      }
+
+      .shop-transition {
+        position: fixed;
+        inset: 0;
+        z-index: 5000;
+        display: grid;
+        place-items: center;
+        pointer-events: none;
+        opacity: 0;
+        background:
+          radial-gradient(
+            circle at 50% 48%,
+            rgba(197, 160, 89, 0.2),
+            transparent 30%
+          ),
+          #050914;
+        transition: opacity 0.42s ease;
+      }
+      .shop-transition.active {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .shop-transition-brand {
+        display: grid;
+        justify-items: center;
+        gap: 12px;
+        opacity: 0;
+        transform: translateY(14px) scale(0.94);
+      }
+      .shop-transition.active .shop-transition-brand {
+        animation: shopBrandReveal 1.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+      .shop-transition img {
+        width: clamp(150px, 18vw, 250px);
+        max-height: 250px;
+        object-fit: contain;
+      }
+      .shop-transition strong {
+        color: var(--gold2, #f3d58b);
+        font-size: clamp(1.5rem, 3vw, 2.5rem);
+        letter-spacing: 0.42em;
+        padding-left: 0.42em;
+      }
+      .shop-transition small {
+        color: rgba(255, 255, 255, 0.58);
+        letter-spacing: 0.35em;
+        padding-left: 0.35em;
+      }
+      @keyframes shopBrandReveal {
+        0% {
+          opacity: 0;
+          transform: translateY(14px) scale(0.94);
+          filter: blur(10px);
+        }
+        45%,
+        72% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+          filter: blur(0);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-8px) scale(1.035);
+          filter: blur(5px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shop-transition" id="shopTransition" aria-hidden="true">
+      <div class="shop-transition-brand">
+        <img
+          src="assets/images/brand/logo.png?v=20260604-user-logo"
+          alt="阿热灵绣 logo"
+        />
+        <strong>阿热灵绣</strong>
+        <small>ARE LINGXIU · CRAFT BOUTIQUE</small>
+      </div>
+    </div>
+
+    <main>
+      <header>
+        <a href="index.html" class="logo"
+          ><img
+            src="assets/images/brand/logo.png?v=20260604-user-logo"
+            alt="阿热灵绣 logo"
+          /><span>阿热灵绣</span></a
+        >
+        <nav>
+          <a href="index.html" class="active">首页</a>
+          <a href="about.html">项目背景</a>
+          <a href="patterns.html">纹样数据库</a>
+          <a href="custom.html">定制引擎</a>
+          <a href="shop.html">文创商城</a>
+        </nav>
+      </header>
+
+      <section class="hero">
+        <img
+          class="hero-logo"
+          src="assets/images/brand/logo.png?v=20260604-user-logo"
+          alt="阿热灵绣高清标识"
+        />
+        <h1>智绣乡村</h1>
+        <p>AI 非遗纹样 × 活态传承 × 文创消费</p>
+        <div class="sub">
+          把藏羌绣纹样、传承人技艺、研学体验与文创商品连接成一条可看、可查、可定制、可购买的数字化路径。
+        </div>
+      </section>
+
+      <section class="portals" aria-label="核心入口">
+        <a href="custom.html" class="portal-card p-lab smooth-link">
+          <span class="portal-mark"></span>
+          <div class="eyebrow">Zhixiu Lab</div>
+          <h2>智绣工作室</h2>
+          <p>
+            集合 AI 生成纹样与 AI
+            识别纹样两种能力，通过扫描、计算与织物打印动效呈现非遗创新过程。
+          </p>
+          <span class="btn-action">进入实验室</span>
+        </a>
+        <a href="shop.html" class="portal-card p-shop smooth-link">
+          <span class="portal-mark"></span>
+          <div class="eyebrow">Craft Boutique</div>
+          <h2>匠心精品馆</h2>
+          <p>
+            以故宫商城式的陈列节奏，按服饰、包袋、研学、定制服务分区展示，完成搜索、筛选与购物车闭环。
+          </p>
+          <span class="btn-action">进入精品馆</span>
+        </a>
+      </section>
+
+      <section class="activities">
+        <div class="section-title">
+          <span>Activities</span>
+          <h2>非遗活动与服务</h2>
+        </div>
+        <div class="activity-rail" id="activityRail"></div>
+      </section>
+
+      <section class="lab-showcase">
+        <div class="lab-copy">
+          <div class="eyebrow">Pattern Database</div>
+          <h2>让传统纹样走进当代生活</h2>
+          <p>
+            我们以阿热灵绣的传统针法、色彩语言与地域记忆为起点，将散落在服饰、器物和口述故事中的纹样整理为可检索、可理解、可继续创造的数字档案。
+          </p>
+          <div class="lab-story">
+            纹样不只是装饰，也是关于山河、祝福与生活方式的文化文本。通过智绣工作室，传统图案能够被识别、解读和重新组合，并自然进入文创产品、研学课程、空间设计与品牌合作，让非遗真正融入今天的生活。
+          </div>
+          <div class="lab-step">
+            <strong>纹样档案与文化释义</strong><span>可检索</span>
+          </div>
+          <div class="lab-step">
+            <strong>智能生成与设计转译</strong><span>可体验</span>
+          </div>
+          <div class="lab-step">
+            <strong>文创开发与服务落地</strong><span>可转化</span>
+          </div>
+          <div class="lab-metrics">
+            <div class="lab-metric">
+              <strong>文化可读</strong><span>名称、寓意与工艺档案</span>
+            </div>
+            <div class="lab-metric">
+              <strong>设计可用</strong><span>生成、识别与应用转译</span>
+            </div>
+            <div class="lab-metric">
+              <strong>价值可续</strong><span>文创、研学与品牌合作</span>
+            </div>
+          </div>
+          <div class="lab-actions">
+            <a href="patterns.html">浏览纹样数据库</a>
+            <a href="custom.html">进入智绣工作室</a>
+          </div>
+        </div>
+        <div class="pattern-preview" id="patternPreview"></div>
+      </section>
+
+      <section class="resources">
+        <div class="res-card">
+          <img src="assets/images/heritage/textbook.jpg" alt="教材" />
+          <div>
+            <h3>专业教材 · 体系传承</h3>
+            <p>教材、课程、研学与传承人档案共同支撑数据库内容。</p>
+          </div>
+        </div>
+        <div class="res-card">
+          <img src="assets/images/heritage/inheritor.jpg" alt="传承人" />
+          <div>
+            <h3>非遗传承档案</h3>
+            <p>记录传承人的针法、色彩与口述资料，辅助数字化传播。</p>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <p>© 2026 成都市阿热灵绣刺绣有限责任公司 | 助力乡村振兴</p>
+      </footer>
+    </main>
+    <script src="assets/js/pattern-manifest.js"></script>
+    <script>
+      const uploadedPatterns = window.UPLOADED_PATTERN_FILES || [];
+      const displayName = (file) => file.name.replace(/\.[^.]+$/, "");
+      document.getElementById("patternPreview").innerHTML = uploadedPatterns
+        .slice(0, 4)
+        .map(
+          (file) =>
+            `<a href="patterns.html"><img src="${file.url}" alt="${displayName(file)}"><b>${displayName(file)}</b></a>`,
+        )
+        .join("");
+      document.querySelectorAll(".portal-mark").forEach((mark, index) => {
+        const file = uploadedPatterns[index % uploadedPatterns.length];
+        if (file) mark.style.backgroundImage = `url("${file.url}")`;
+        else mark.hidden = true;
+      });
+      const activities = [
+        {
+          img: "assets/images/products/图片11.jpg",
+          title: "非遗文化体验",
+          text: "在真实场景中感受藏羌刺绣的色彩、针法与文化故事。",
+        },
+        {
+          img: "assets/images/products/二期文创2.jpg",
+          title: "文创共创工坊",
+          text: "从传统纹样出发，共同完成适合当代生活的文创设计。",
+        },
+        {
+          img: "assets/images/products/二期文创3.jpg",
+          title: "纹样设计服务",
+          text: "围绕品牌、包装与空间应用提供纹样转译和设计支持。",
+        },
+        {
+          img: "assets/images/products/二期文创4.jpg",
+          title: "非遗研学课程",
+          text: "把纹样讲解、手作体验与作品展示融入研学旅程。",
+        },
+        {
+          img: "assets/images/products/藏羌盲盒.jpg",
+          title: "藏羌潮玩体验",
+          text: "以盲盒和收藏产品连接年轻用户与传统文化。",
+        },
+        {
+          img: "assets/images/products/棉花娃娃藏族女.jpg",
+          title: "民族娃娃定制",
+          text: "将民族服饰与纹样细节转化为可收藏、可陪伴的作品。",
+        },
+      ];
+      document.getElementById("activityRail").innerHTML = [
+        ...activities,
+        ...activities,
+      ]
+        .map(
+          (item) => `
+    <article class="activity-card"><img src="${item.img}" alt="${item.title}"><div class="activity-copy"><h4>${item.title}</h4><p>${item.text}</p></div></article>
+`,
+        )
+        .join("");
+      document.querySelectorAll(".portal-card").forEach((card) => {
+        card.addEventListener("mousemove", (e) => {
+          const rect = card.getBoundingClientRect();
+          card.style.setProperty("--x", `${e.clientX - rect.left}px`);
+          card.style.setProperty("--y", `${e.clientY - rect.top}px`);
+        });
+      });
+      document.querySelectorAll(".smooth-link").forEach((link) => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          document.body.classList.add("page-transition");
+          setTimeout(() => (location.href = link.href), 380);
+        });
+      });
+    </script>
+    <script>
+      const navigationBar = document.querySelector("header");
+      const syncNavigationBar = () =>
+        navigationBar?.classList.toggle("is-scrolled", window.scrollY > 18);
+      window.addEventListener("scroll", syncNavigationBar, { passive: true });
+      syncNavigationBar();
+    </script>
+    <script>
+      document.addEventListener(
+        "click",
+        (event) => {
+          const shopLink = event.target.closest('a[href="shop.html"]');
+          if (!shopLink) return;
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          const transition = document.getElementById("shopTransition");
+          transition?.classList.add("active");
+          setTimeout(() => (window.location.href = "shop.html"), 1120);
+        },
+        true,
+      );
+    </script>
+  </body>
+</html>
