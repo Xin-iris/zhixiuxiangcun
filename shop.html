@@ -47,9 +47,13 @@
       }
       .topbar {
         min-height: 98px;
-        background: rgba(6, 11, 21, 0.88);
+        background: linear-gradient(
+          180deg,
+          rgba(6, 11, 21, 0.8),
+          rgba(6, 11, 21, 0.54)
+        );
         display: grid;
-        grid-template-columns: 150px 1fr auto;
+        grid-template-columns: 310px 1fr auto;
         align-items: center;
         gap: 30px;
         padding: 14px 5%;
@@ -57,8 +61,21 @@
         top: 0;
         z-index: 40;
         border-bottom: 1px solid rgba(197, 160, 89, 0.24);
-        backdrop-filter: blur(18px);
-        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+        backdrop-filter: blur(22px) saturate(135%);
+        box-shadow: 0 14px 42px rgba(0, 0, 0, 0.16);
+        transition:
+          background 0.35s ease,
+          box-shadow 0.35s ease,
+          border-color 0.35s ease;
+      }
+      .topbar.is-scrolled {
+        background: linear-gradient(
+          180deg,
+          rgba(6, 11, 21, 0.92),
+          rgba(6, 11, 21, 0.72)
+        );
+        border-bottom-color: rgba(243, 213, 139, 0.28);
+        box-shadow: 0 20px 58px rgba(0, 0, 0, 0.3);
       }
       .brand {
         display: flex;
@@ -596,7 +613,10 @@
         ><img
           src="assets/images/brand/logo.png?v=20260604-user-logo"
           alt="阿热灵绣 logo"
-      /></a>
+        /><span
+          ><strong>阿热灵绣精品</strong><small>ARE LINGXIU SHOP</small></span
+        ></a
+      >
       <div class="search">
         <span class="icon"
           ><svg viewBox="0 0 24 24">
@@ -972,6 +992,13 @@
       }
       renderAll();
       renderCart();
+    </script>
+    <script>
+      const navigationBar = document.querySelector("header");
+      const syncNavigationBar = () =>
+        navigationBar?.classList.toggle("is-scrolled", window.scrollY > 18);
+      window.addEventListener("scroll", syncNavigationBar, { passive: true });
+      syncNavigationBar();
     </script>
   </body>
 </html>

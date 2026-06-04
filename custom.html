@@ -42,9 +42,27 @@
         position: sticky;
         top: 0;
         z-index: 30;
-        background: rgba(6, 11, 21, 0.88);
-        backdrop-filter: blur(18px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+        background: linear-gradient(
+          180deg,
+          rgba(6, 11, 21, 0.78),
+          rgba(6, 11, 21, 0.48)
+        );
+        backdrop-filter: blur(22px) saturate(135%);
+        border-bottom: 1px solid rgba(243, 213, 139, 0.12);
+        box-shadow: 0 12px 38px rgba(0, 0, 0, 0.12);
+        transition:
+          background 0.35s ease,
+          box-shadow 0.35s ease,
+          border-color 0.35s ease;
+      }
+      header.is-scrolled {
+        background: linear-gradient(
+          180deg,
+          rgba(6, 11, 21, 0.9),
+          rgba(6, 11, 21, 0.7)
+        );
+        border-bottom-color: rgba(243, 213, 139, 0.2);
+        box-shadow: 0 18px 52px rgba(0, 0, 0, 0.28);
       }
       .logo {
         display: flex;
@@ -385,7 +403,8 @@
         ><img
           src="assets/images/brand/logo.png?v=20260604-user-logo"
           alt="阿热灵绣 logo"
-      /></a>
+        /><span>阿热灵绣</span></a
+      >
       <nav>
         <a href="index.html">首页</a><a href="about.html">项目背景</a
         ><a href="patterns.html">纹样数据库</a
@@ -596,6 +615,13 @@
         );
       }
       generatePattern();
+    </script>
+    <script>
+      const navigationBar = document.querySelector("header");
+      const syncNavigationBar = () =>
+        navigationBar?.classList.toggle("is-scrolled", window.scrollY > 18);
+      window.addEventListener("scroll", syncNavigationBar, { passive: true });
+      syncNavigationBar();
     </script>
   </body>
 </html>
