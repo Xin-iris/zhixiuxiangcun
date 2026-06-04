@@ -1,0 +1,722 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>智绣工作室 | 阿热灵绣</title>
+    <style>
+      :root {
+        --gold: #c5a059;
+        --gold2: #f3d58b;
+        --bg: #060b15;
+        --panel: rgba(12, 19, 35, 0.88);
+        --muted: #a0aec0;
+        --line: rgba(197, 160, 89, 0.28);
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        background: #060b15;
+        color: #fff;
+        line-height: 1.6;
+      }
+      body:before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background:
+          linear-gradient(rgba(6, 11, 21, 0.86), rgba(6, 11, 21, 0.96)),
+          url("assets/images/backgrounds/background.jpg") center/cover fixed;
+        z-index: -1;
+      }
+      header {
+        min-height: 80px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 5% 12px 3.8%;
+        position: sticky;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        background: linear-gradient(
+          180deg,
+          rgba(6, 11, 21, 0.78),
+          rgba(6, 11, 21, 0.48)
+        );
+        backdrop-filter: blur(22px) saturate(135%);
+        border-bottom: 1px solid rgba(243, 213, 139, 0.12);
+        box-shadow: 0 12px 38px rgba(0, 0, 0, 0.12);
+        transition:
+          background 0.35s ease,
+          box-shadow 0.35s ease,
+          border-color 0.35s ease;
+      }
+      header.is-scrolled {
+        background: linear-gradient(
+          180deg,
+          rgba(6, 11, 21, 0.9),
+          rgba(6, 11, 21, 0.7)
+        );
+        border-bottom-color: rgba(243, 213, 139, 0.2);
+        box-shadow: 0 18px 52px rgba(0, 0, 0, 0.28);
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        color: var(--gold);
+        text-decoration: none;
+        font-size: 1.18rem;
+        font-weight: 900;
+        letter-spacing: 2.5px;
+        white-space: nowrap;
+      }
+      .logo img {
+        display: block;
+        width: 82px;
+        height: 56px;
+        object-fit: contain;
+      }
+      nav a {
+        color: var(--muted);
+        text-decoration: none;
+        margin-left: 22px;
+        font-size: 0.92rem;
+      }
+      nav a:hover,
+      nav a.active {
+        color: var(--gold2);
+      }
+      .hero {
+        padding: 72px 6% 34px;
+        text-align: center;
+      }
+      .eyebrow {
+        color: var(--gold2);
+        letter-spacing: 6px;
+        text-transform: uppercase;
+        font-size: 0.78em;
+        font-weight: 900;
+      }
+      .hero h1 {
+        font-size: clamp(2.4rem, 6vw, 5.2rem);
+        margin: 10px 0;
+      }
+      .hero p {
+        max-width: 880px;
+        margin: auto;
+        color: rgba(255, 255, 255, 0.72);
+      }
+      .lab-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+        padding: 24px 6% 70px;
+      }
+      .module {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 30px;
+        padding: 28px;
+        min-height: 720px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 28px 80px rgba(0, 0, 0, 0.35);
+      }
+      .module:before {
+        content: "";
+        position: absolute;
+        inset: 14px;
+        border: 1px solid rgba(243, 213, 139, 0.2);
+        border-radius: 24px;
+        pointer-events: none;
+      }
+      .module h2 {
+        font-size: 2rem;
+        margin: 9px 0 12px;
+      }
+      .module > p {
+        color: var(--muted);
+        margin-bottom: 22px;
+      }
+      .control-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+      select,
+      input,
+      textarea {
+        width: 100%;
+        padding: 13px 14px;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.055);
+        color: #fff;
+        outline: none;
+      }
+      textarea {
+        min-height: 92px;
+        resize: vertical;
+      }
+      .btn {
+        border: 0;
+        border-radius: 999px;
+        padding: 13px 24px;
+        background: linear-gradient(135deg, var(--gold2), var(--gold));
+        color: #07101f;
+        font-weight: 900;
+        cursor: pointer;
+        box-shadow: 0 15px 32px rgba(197, 160, 89, 0.25);
+      }
+      .ghost {
+        background: transparent;
+        color: var(--gold2);
+        border: 1px solid var(--line);
+      }
+      .print-stage,
+      .scan-stage {
+        height: 330px;
+        border-radius: 24px;
+        background:
+          radial-gradient(
+            circle at 50% 22%,
+            rgba(197, 160, 89, 0.16),
+            transparent 45%
+          ),
+          #050a14;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        position: relative;
+        overflow: hidden;
+        margin: 22px 0;
+      }
+      .paper {
+        position: absolute;
+        left: 50%;
+        top: 32px;
+        width: 230px;
+        height: 230px;
+        transform: translateX(-50%) translateY(-120%);
+        background: #fbf6e8;
+        border-radius: 12px;
+        box-shadow: 0 24px 55px rgba(0, 0, 0, 0.45);
+        overflow: hidden;
+      }
+      .paper.printing {
+        animation: paperDrop 3.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+      .paper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+      }
+      .paper.printing img {
+        animation: revealPrint 2.4s steps(12) 0.6s forwards;
+      }
+      .printer-slot {
+        position: absolute;
+        top: 24px;
+        left: 50%;
+        width: 320px;
+        height: 34px;
+        transform: translateX(-50%);
+        border-radius: 999px;
+        background: linear-gradient(90deg, #060b15, #273246, #060b15);
+        border: 1px solid var(--line);
+      }
+      @keyframes paperDrop {
+        0% {
+          transform: translateX(-50%) translateY(-120%);
+        }
+        45% {
+          transform: translateX(-50%) translateY(0);
+        }
+        100% {
+          transform: translateX(-50%) translateY(28px);
+        }
+      }
+      @keyframes revealPrint {
+        from {
+          clip-path: inset(0 0 100% 0);
+          opacity: 0.2;
+        }
+        to {
+          clip-path: inset(0);
+          opacity: 1;
+        }
+      }
+      .compute-log {
+        font-family: "SFMono-Regular", Consolas, monospace;
+        font-size: 0.82em;
+        color: #89f7c3;
+        background: rgba(0, 0, 0, 0.22);
+        border: 1px solid rgba(137, 247, 195, 0.16);
+        border-radius: 16px;
+        padding: 14px;
+        min-height: 116px;
+        white-space: pre-line;
+      }
+      .progress {
+        height: 8px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 999px;
+        overflow: hidden;
+        margin: 12px 0;
+      }
+      .progress span {
+        display: block;
+        height: 100%;
+        width: 0;
+        background: linear-gradient(90deg, var(--gold), #89f7c3);
+        transition: width 0.45s;
+      }
+      .scan-image {
+        position: absolute;
+        left: 50%;
+        top: 48px;
+        width: 245px;
+        height: 245px;
+        transform: translateX(-50%);
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
+      }
+      .scan-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .scan-line {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, transparent, #89f7c3, transparent);
+        box-shadow: 0 0 25px #89f7c3;
+        top: -10px;
+        opacity: 0;
+      }
+      .scanning .scan-line {
+        animation: scan 2.6s ease-in-out 2;
+      }
+      .scan-grid {
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(rgba(137, 247, 195, 0.12) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(137, 247, 195, 0.12) 1px, transparent 1px);
+        background-size: 28px 28px;
+        opacity: 0.3;
+      }
+      @keyframes scan {
+        0% {
+          top: 0;
+          opacity: 1;
+        }
+        50% {
+          top: 100%;
+          opacity: 1;
+        }
+        100% {
+          top: 0;
+          opacity: 0.7;
+        }
+      }
+      .result-card {
+        display: grid;
+        grid-template-columns: 96px 1fr;
+        gap: 14px;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.045);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 18px;
+        padding: 13px;
+        margin-top: 14px;
+        opacity: 0.5;
+        transition: 0.4s;
+      }
+      .result-card.active {
+        opacity: 1;
+        border-color: var(--gold);
+        transform: translateY(-4px);
+      }
+      .result-card img {
+        width: 96px;
+        height: 96px;
+        object-fit: cover;
+        border-radius: 12px;
+      }
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 9px;
+      }
+      .tags span {
+        font-size: 0.72em;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 4px 8px;
+        color: var(--muted);
+      }
+      .database-strip {
+        padding: 0 6% 80px;
+      }
+      .database-strip h2 {
+        text-align: center;
+        font-size: 2.3rem;
+        margin-bottom: 22px;
+      }
+      .mini-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+      }
+      .mini-grid img {
+        width: 100%;
+        aspect-ratio: 1/1;
+        object-fit: cover;
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      @media (max-width: 1000px) {
+        .lab-grid {
+          grid-template-columns: 1fr;
+        }
+        .module {
+          min-height: auto;
+        }
+        .mini-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      .shop-transition {
+        position: fixed;
+        inset: 0;
+        z-index: 5000;
+        display: grid;
+        place-items: center;
+        pointer-events: none;
+        opacity: 0;
+        background:
+          radial-gradient(
+            circle at 50% 48%,
+            rgba(197, 160, 89, 0.2),
+            transparent 30%
+          ),
+          #050914;
+        transition: opacity 0.42s ease;
+      }
+      .shop-transition.active {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .shop-transition-brand {
+        display: grid;
+        justify-items: center;
+        gap: 12px;
+        opacity: 0;
+        transform: translateY(14px) scale(0.94);
+      }
+      .shop-transition.active .shop-transition-brand {
+        animation: shopBrandReveal 1.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+      .shop-transition img {
+        width: clamp(150px, 18vw, 250px);
+        max-height: 250px;
+        object-fit: contain;
+      }
+      .shop-transition strong {
+        color: var(--gold2, #f3d58b);
+        font-size: clamp(1.5rem, 3vw, 2.5rem);
+        letter-spacing: 0.42em;
+        padding-left: 0.42em;
+      }
+      .shop-transition small {
+        color: rgba(255, 255, 255, 0.58);
+        letter-spacing: 0.35em;
+        padding-left: 0.35em;
+      }
+      @keyframes shopBrandReveal {
+        0% {
+          opacity: 0;
+          transform: translateY(14px) scale(0.94);
+          filter: blur(10px);
+        }
+        45%,
+        72% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+          filter: blur(0);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-8px) scale(1.035);
+          filter: blur(5px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shop-transition" id="shopTransition" aria-hidden="true">
+      <div class="shop-transition-brand">
+        <img
+          src="assets/images/brand/logo.png?v=20260604-user-logo"
+          alt="阿热灵绣 logo"
+        />
+        <strong>阿热灵绣</strong>
+        <small>ARE LINGXIU · CRAFT BOUTIQUE</small>
+      </div>
+    </div>
+
+    <header>
+      <a href="index.html" class="logo"
+        ><img
+          src="assets/images/brand/logo.png?v=20260604-user-logo"
+          alt="阿热灵绣 logo"
+        /><span>阿热灵绣</span></a
+      >
+      <nav>
+        <a href="index.html">首页</a><a href="about.html">项目背景</a
+        ><a href="patterns.html">纹样数据库</a
+        ><a href="custom.html" class="active">定制引擎</a
+        ><a href="shop.html">文创商城</a>
+      </nav>
+    </header>
+    <section class="hero">
+      <div class="eyebrow">Zhixiu Interactive Engine</div>
+      <h1>智绣工作室</h1>
+      <p>
+        选择 AI 生成纹样或 AI
+        识别纹样两种能力，在沉浸式工作台中完成创意表达、扫描分析与纹样档案沉淀。
+      </p>
+    </section>
+    <main class="lab-grid">
+      <section class="module">
+        <div class="eyebrow">AI Pattern Generation</div>
+        <h2>AI生成纹样</h2>
+        <p>
+          输入寓意、色调与应用场景，工作室会模拟语义分析、针法拆解和织物打印过程，输出可用于文创开发的纹样方案。
+        </p>
+        <div class="control-row">
+          <select id="meaning">
+            <option>团圆祈福</option>
+            <option>山川守护</option>
+            <option>多福新生</option>
+            <option>丰收绵延</option></select
+          ><select id="tone">
+            <option>金线沉稳</option>
+            <option>蓝金典雅</option>
+            <option>红金喜庆</option>
+            <option>绿金自然</option>
+          </select>
+        </div>
+        <textarea
+          id="scene"
+          placeholder="描述应用场景，例如：送给年轻游客的手机壳、研学伴手礼、节庆香囊……"
+        >
+年轻游客喜欢的手机壳和香囊，既现代又保留藏羌绣寓意。</textarea
+        >
+        <button class="btn" onclick="generatePattern()">开始生成</button>
+        <div class="print-stage">
+          <div class="printer-slot"></div>
+          <div class="paper" id="paper">
+            <img
+              id="generatedImg"
+              src="assets/images/patterns/generate/蝶榴新生纹.png?v=20260604-user-patterns"
+              alt="生成纹样"
+            />
+          </div>
+        </div>
+        <div class="progress"><span id="genProgress"></span></div>
+        <div class="compute-log" id="genLog">等待生成任务……</div>
+      </section>
+      <section class="module">
+        <div class="eyebrow">AI Pattern Recognition</div>
+        <h2>AI识别纹样</h2>
+        <p>
+          上传或选择纹样样本后，工作室会以扫描动效呈现色彩、针法、构图和寓意标签的识别过程，生成可入库的纹样档案。
+        </p>
+        <div class="control-row">
+          <select id="sample">
+            <option
+              value="assets/images/patterns/generate/嘉绒花云团纹.png?v=20260604-user-patterns"
+            >
+              嘉绒花云团纹
+            </option>
+            <option
+              value="assets/images/patterns/generate/雪山守护纹.png?v=20260604-user-patterns"
+            >
+              雪山守护纹
+            </option>
+            <option
+              value="assets/images/patterns/generate/水流丰收纹.png?v=20260604-user-patterns"
+            >
+              水流丰收纹
+            </option>
+            <option
+              value="assets/images/patterns/generate/蝶榴新生纹.png?v=20260604-user-patterns"
+            >
+              蝶榴新生纹
+            </option></select
+          ><button class="btn ghost" onclick="useGenerated()">
+            使用生成纹样
+          </button>
+        </div>
+        <button class="btn" onclick="recognizePattern()">开始AI识别</button>
+        <div class="scan-stage" id="scanStage">
+          <div class="scan-image">
+            <img
+              id="scanImg"
+              src="assets/images/patterns/generate/嘉绒花云团纹.png?v=20260604-user-patterns"
+              alt="待识别纹样"
+            />
+            <div class="scan-grid"></div>
+            <div class="scan-line"></div>
+          </div>
+        </div>
+        <div class="progress"><span id="scanProgress"></span></div>
+        <div class="compute-log" id="scanLog">等待扫描任务……</div>
+        <div class="result-card" id="resultCard">
+          <img
+            id="resultImg"
+            src="assets/images/patterns/generate/嘉绒花云团纹.png?v=20260604-user-patterns"
+            alt="识别结果"
+          />
+          <div>
+            <strong id="resultTitle">AR-101 嘉绒花云团纹</strong>
+            <p id="resultDesc">完成扫描后将显示置信度、标签和入库编号。</p>
+            <div class="tags"><span>待识别</span><span>待入库</span></div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <section class="database-strip">
+      <h2>工作室可调取纹样</h2>
+      <div class="mini-grid">
+        <img
+          src="assets/images/patterns/generate/羌笛回旋纹.png?v=20260604-user-patterns"
+          alt="羌笛回旋纹"
+        /><img
+          src="assets/images/patterns/generate/金线牡丹纹.png?v=20260604-user-patterns"
+          alt="金线牡丹纹"
+        /><img
+          src="assets/images/patterns/generate/羊角护佑纹.png?v=20260604-user-patterns"
+          alt="羊角护佑纹"
+        /><img
+          src="assets/images/patterns/generate/星河织带纹.png?v=20260604-user-patterns"
+          alt="星河织带纹"
+        />
+      </div>
+    </section>
+    <script>
+      const generated = [
+        "assets/images/patterns/generate/蝶榴新生纹.png?v=20260604-user-patterns",
+        "assets/images/patterns/generate/金线牡丹纹.png?v=20260604-user-patterns",
+        "assets/images/patterns/generate/日月同辉纹.png?v=20260604-user-patterns",
+        "assets/images/patterns/generate/莲华净境纹.png?v=20260604-user-patterns",
+      ];
+      let latest = generated[0];
+      function runSteps(logEl, progressEl, steps, done) {
+        let i = 0;
+        logEl.textContent = "";
+        progressEl.style.width = "0%";
+        const timer = setInterval(() => {
+          logEl.textContent += `> ${steps[i]}\n`;
+          progressEl.style.width = `${Math.round(((i + 1) / steps.length) * 100)}%`;
+          i++;
+          if (i >= steps.length) {
+            clearInterval(timer);
+            setTimeout(done, 450);
+          }
+        }, 620);
+      }
+      function generatePattern() {
+        const idx = Math.floor(Math.random() * generated.length);
+        latest = generated[idx];
+        const paper = document.getElementById("paper");
+        paper.classList.remove("printing");
+        void paper.offsetWidth;
+        document.getElementById("generatedImg").src = latest;
+        runSteps(
+          document.getElementById("genLog"),
+          document.getElementById("genProgress"),
+          [
+            "读取寓意词与应用场景",
+            "拆解藏羌绣图腾语义",
+            "匹配色彩与针法约束",
+            "生成边框与主体纹样",
+            "输出可入库 SVG 图稿",
+          ],
+          () => {
+            paper.classList.add("printing");
+          },
+        );
+      }
+      function useGenerated() {
+        document.getElementById("sample").value = latest;
+        document.getElementById("scanImg").src = latest;
+      }
+      function recognizePattern() {
+        const sample = document.getElementById("sample").value;
+        document.getElementById("scanImg").src = sample;
+        document.getElementById("resultImg").src = sample;
+        const stage = document.getElementById("scanStage");
+        stage.classList.remove("scanning");
+        void stage.offsetWidth;
+        stage.classList.add("scanning");
+        document.getElementById("resultCard").classList.remove("active");
+        runSteps(
+          document.getElementById("scanLog"),
+          document.getElementById("scanProgress"),
+          [
+            "启动高精度扫描光栅",
+            "提取主色：金线 / 蓝底 / 红底",
+            "识别针法：盘金绣、锁边绣、彩线绣",
+            "匹配数据库近邻纹样",
+            "生成 AR-LAB 入库编号",
+          ],
+          () => {
+            document.getElementById("resultTitle").textContent =
+              "AR-LAB 纹样档案已生成";
+            document.getElementById("resultDesc").textContent =
+              "置信度 96.8%，标签：生成纹样、可授权、适合文创开发。";
+            document.getElementById("resultCard").classList.add("active");
+          },
+        );
+      }
+      generatePattern();
+    </script>
+    <script>
+      const navigationBar = document.querySelector("header");
+      const syncNavigationBar = () =>
+        navigationBar?.classList.toggle("is-scrolled", window.scrollY > 18);
+      window.addEventListener("scroll", syncNavigationBar, { passive: true });
+      syncNavigationBar();
+    </script>
+    <script>
+      document.addEventListener(
+        "click",
+        (event) => {
+          const shopLink = event.target.closest('a[href="shop.html"]');
+          if (!shopLink) return;
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          const transition = document.getElementById("shopTransition");
+          transition?.classList.add("active");
+          setTimeout(() => (window.location.href = "shop.html"), 1120);
+        },
+        true,
+      );
+    </script>
+  </body>
+</html>

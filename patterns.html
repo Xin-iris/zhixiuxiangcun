@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>纹样数据库 | 阿热灵绣</title>
+    <style>
+      :root {
+        --gold: #c5a059;
+        --gold2: #f3d58b;
+        --bg: #060b15;
+        --panel: rgba(12, 19, 35, 0.86);
+        --muted: #9aa8bd;
+        --line: rgba(197, 160, 89, 0.28);
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        background: #060b15;
+        color: #fff;
+        line-height: 1.6;
+      }
+      body:before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background:
+          linear-gradient(rgba(6, 11, 21, 0.86), rgba(6, 11, 21, 0.95)),
+          url("assets/images/backgrounds/background.jpg") center/cover fixed;
+        z-index: -1;
+      }
+      header {
+        min-height: 80px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 5% 12px 3.8%;
+        position: sticky;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        background: linear-gradient(
+          180deg,
+          rgba(6, 11, 21, 0.78),
+          rgba(6, 11, 21, 0.48)
+        );
+        backdrop-filter: blur(22px) saturate(135%);
+        border-bottom: 1px solid rgba(243, 213, 139, 0.12);
+        box-shadow: 0 12px 38px rgba(0, 0, 0, 0.12);
+        transition:
+          background 0.35s ease,
+          box-shadow 0.35s ease,
+          border-color 0.35s ease;
+      }
+      header.is-scrolled {
+        background: linear-gradient(
+          180deg,
+          rgba(6, 11, 21, 0.9),
+          rgba(6, 11, 21, 0.7)
+        );
+        border-bottom-color: rgba(243, 213, 139, 0.2);
+        box-shadow: 0 18px 52px rgba(0, 0, 0, 0.28);
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        color: var(--gold);
+        text-decoration: none;
+        font-size: 1.18rem;
+        font-weight: 900;
+        letter-spacing: 2.5px;
+        white-space: nowrap;
+      }
+      .logo img {
+        display: block;
+        width: 82px;
+        height: 56px;
+        object-fit: contain;
+      }
+      nav a {
+        color: var(--muted);
+        text-decoration: none;
+        margin-left: 22px;
+        font-size: 0.92rem;
+      }
+      nav a.active,
+      nav a:hover {
+        color: var(--gold2);
+      }
+      .hero {
+        padding: 70px 6% 32px;
+        text-align: center;
+      }
+      .hero span {
+        color: var(--gold2);
+        letter-spacing: 6px;
+        font-weight: 900;
+        text-transform: uppercase;
+        font-size: 0.78em;
+      }
+      .hero h1 {
+        font-size: clamp(2.5rem, 6vw, 5.5rem);
+        margin: 10px 0;
+      }
+      .hero p {
+        max-width: 840px;
+        margin: auto;
+        color: rgba(255, 255, 255, 0.72);
+      }
+      .db-layout {
+        display: grid;
+        grid-template-columns: 290px 1fr;
+        gap: 28px;
+        padding: 24px 6% 80px;
+      }
+      .sidebar {
+        position: sticky;
+        top: 98px;
+        align-self: start;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: 24px;
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+      }
+      .sidebar h3 {
+        color: var(--gold2);
+        margin-bottom: 16px;
+      }
+      .sync-note {
+        color: var(--muted);
+        font-size: 0.82rem;
+        line-height: 1.8;
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+      }
+      .sync-note code {
+        color: var(--gold2);
+      }
+      .filter-group {
+        margin-bottom: 22px;
+      }
+      .filter-group label {
+        display: block;
+        color: #fff;
+        margin-bottom: 10px;
+        font-weight: 800;
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+      }
+      .chip {
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--muted);
+        border-radius: 999px;
+        padding: 8px 12px;
+        cursor: pointer;
+        transition: 0.25s;
+      }
+      .chip.active,
+      .chip:hover {
+        background: var(--gold);
+        border-color: var(--gold);
+        color: #08101d;
+        font-weight: 900;
+      }
+      .search {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 22px;
+      }
+      .search input {
+        flex: 1;
+        padding: 16px 18px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.05);
+        color: #fff;
+        font-size: 1em;
+      }
+      .search button {
+        border: 0;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--gold2), var(--gold));
+        padding: 0 26px;
+        font-weight: 900;
+        color: #06101d;
+        cursor: pointer;
+      }
+      .result-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+        color: var(--muted);
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+      }
+      .card {
+        background: rgba(255, 255, 255, 0.045);
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        border-radius: 22px;
+        overflow: hidden;
+        transition: 0.35s;
+        box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
+      }
+      .card:hover {
+        transform: translateY(-10px);
+        border-color: var(--gold);
+        box-shadow: 0 32px 80px rgba(197, 160, 89, 0.18);
+      }
+      .card img {
+        width: 100%;
+        aspect-ratio: 1/1;
+        object-fit: cover;
+        display: block;
+        background: #030711;
+      }
+      .card-body {
+        padding: 16px;
+      }
+      .code {
+        font-family: Georgia, serif;
+        color: var(--gold2);
+        letter-spacing: 2px;
+        font-weight: 900;
+      }
+      .card h3 {
+        margin: 6px 0;
+        font-size: 1.08em;
+      }
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 12px;
+      }
+      .meta span {
+        font-size: 0.72em;
+        border: 1px solid rgba(197, 160, 89, 0.28);
+        color: var(--muted);
+        border-radius: 999px;
+        padding: 4px 8px;
+      }
+      .empty {
+        grid-column: 1/-1;
+        padding: 60px;
+        text-align: center;
+        border: 1px dashed var(--line);
+        border-radius: 24px;
+        color: var(--muted);
+      }
+      .detail {
+        margin-top: 28px;
+        background: linear-gradient(
+          135deg,
+          rgba(197, 160, 89, 0.13),
+          rgba(255, 255, 255, 0.04)
+        );
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        padding: 24px;
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        gap: 24px;
+      }
+      .detail img {
+        width: 220px;
+        border-radius: 20px;
+      }
+      .detail h2 {
+        color: var(--gold2);
+        margin-bottom: 8px;
+      }
+      .detail p {
+        color: rgba(255, 255, 255, 0.72);
+        margin-bottom: 12px;
+      }
+      @media (max-width: 1100px) {
+        .db-layout {
+          grid-template-columns: 1fr;
+        }
+        .sidebar {
+          position: static;
+        }
+        .grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 620px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .detail {
+          grid-template-columns: 1fr;
+        }
+        .detail img {
+          width: 100%;
+        }
+      }
+
+      .shop-transition {
+        position: fixed;
+        inset: 0;
+        z-index: 5000;
+        display: grid;
+        place-items: center;
+        pointer-events: none;
+        opacity: 0;
+        background:
+          radial-gradient(
+            circle at 50% 48%,
+            rgba(197, 160, 89, 0.2),
+            transparent 30%
+          ),
+          #050914;
+        transition: opacity 0.42s ease;
+      }
+      .shop-transition.active {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .shop-transition-brand {
+        display: grid;
+        justify-items: center;
+        gap: 12px;
+        opacity: 0;
+        transform: translateY(14px) scale(0.94);
+      }
+      .shop-transition.active .shop-transition-brand {
+        animation: shopBrandReveal 1.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+      .shop-transition img {
+        width: clamp(150px, 18vw, 250px);
+        max-height: 250px;
+        object-fit: contain;
+      }
+      .shop-transition strong {
+        color: var(--gold2, #f3d58b);
+        font-size: clamp(1.5rem, 3vw, 2.5rem);
+        letter-spacing: 0.42em;
+        padding-left: 0.42em;
+      }
+      .shop-transition small {
+        color: rgba(255, 255, 255, 0.58);
+        letter-spacing: 0.35em;
+        padding-left: 0.35em;
+      }
+      @keyframes shopBrandReveal {
+        0% {
+          opacity: 0;
+          transform: translateY(14px) scale(0.94);
+          filter: blur(10px);
+        }
+        45%,
+        72% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+          filter: blur(0);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-8px) scale(1.035);
+          filter: blur(5px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shop-transition" id="shopTransition" aria-hidden="true">
+      <div class="shop-transition-brand">
+        <img
+          src="assets/images/brand/logo.png?v=20260604-user-logo"
+          alt="阿热灵绣 logo"
+        />
+        <strong>阿热灵绣</strong>
+        <small>ARE LINGXIU · CRAFT BOUTIQUE</small>
+      </div>
+    </div>
+
+    <header>
+      <a href="index.html" class="logo"
+        ><img
+          src="assets/images/brand/logo.png?v=20260604-user-logo"
+          alt="阿热灵绣 logo"
+        /><span>阿热灵绣</span></a
+      >
+      <nav>
+        <a href="index.html">首页</a><a href="about.html">项目背景</a
+        ><a href="patterns.html" class="active">纹样数据库</a
+        ><a href="custom.html">定制引擎</a><a href="shop.html">文创商城</a>
+      </nav>
+    </header>
+    <section class="hero">
+      <span>Embroidery Pattern Archive</span>
+      <h1>纹样数据库</h1>
+      <p>
+        自动同步 generate
+        文件夹中的全部正式纹样，以图片文件名作为纹样名称，并根据名称特征生成主题分类。支持按名称、编号和分类检索。
+      </p>
+    </section>
+    <main class="db-layout">
+      <aside class="sidebar">
+        <h3>真实纹样分类</h3>
+        <div class="filter-group">
+          <label>纹样主题</label>
+          <div class="chips" id="categoryFilters"></div>
+        </div>
+        <div class="filter-group">
+          <label>图片格式</label>
+          <div class="chips" id="formatFilters"></div>
+        </div>
+        <p class="sync-note" id="syncNote">正在读取你上传的纹样文件……</p>
+      </aside>
+      <section>
+        <div class="search">
+          <input
+            id="searchInput"
+            placeholder="搜索新上传的纹样名称、编号或主题分类……"
+          /><button onclick="renderPatterns()">搜索</button>
+        </div>
+        <div class="result-head">
+          <strong id="resultCount">正在同步纹样……</strong
+          ><span>所有图片名称均取自 generate 文件夹</span>
+        </div>
+        <div class="grid" id="patternGrid"></div>
+        <div class="detail" id="patternDetail"></div>
+      </section>
+    </main>
+    <script>
+      const PATTERN_DIRECTORY = "assets/images/patterns/generate/";
+      const PATTERN_SOURCES = [
+        {
+          name: "GitHub",
+          url: "https://api.github.com/repos/Xin-iris/zhixiuxiangcun/contents/assets/images/patterns/generate?ref=main",
+          normalize: (files) =>
+            files.map((file) => ({
+              name: file.name,
+              type: file.type,
+              download_url: file.download_url,
+            })),
+        },
+        {
+          name: "jsDelivr",
+          url: "https://data.jsdelivr.com/v1/package/gh/Xin-iris/zhixiuxiangcun@main/flat",
+          normalize: (data) =>
+            data.files
+              .filter((file) => file.name.startsWith(`/${PATTERN_DIRECTORY}`))
+              .map((file) => ({
+                name: file.name.split("/").pop(),
+                type: "file",
+                download_url: `https://cdn.jsdelivr.net/gh/Xin-iris/zhixiuxiangcun@main${file.name}`,
+              })),
+        },
+      ];
+      const IMAGE_EXTENSIONS = new Set([
+        "png",
+        "jpg",
+        "jpeg",
+        "webp",
+        "gif",
+        "avif",
+        "svg",
+      ]);
+      const CATEGORY_RULES = [
+        ["花卉植物", /花|牡丹|莲|梅|兰|竹|菊|叶|藤|草|枝|石榴|谷|穗|果/],
+        ["动物灵兽", /鸟|蝶|鱼|龙|凤|鹿|羊|虎|鹤|兽|雀|燕/],
+        ["自然山水", /山|水|河|江|云|雪|日|月|星|海|火|雷|雨/],
+        ["几何符号", /回|旋|带|几何|菱|方|圆|角|连|结|环|格/],
+        ["人物生活", /人|舞|笛|农|村|家|节|庆|丰收/],
+      ];
+      let patterns = [];
+      const state = { category: "全部", format: "全部" };
+
+      function escapeHtml(value) {
+        return String(value).replace(
+          /[&<>"']/g,
+          (character) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#039;",
+            })[character],
+        );
+      }
+      function patternName(fileName) {
+        return fileName.replace(/\.[^.]+$/, "").trim();
+      }
+      function patternCategory(name) {
+        return (
+          CATEGORY_RULES.find(([, rule]) => rule.test(name))?.[0] || "传统纹样"
+        );
+      }
+      function toPattern(file, index) {
+        const extension = file.name.split(".").pop().toLowerCase();
+        const name = patternName(file.name);
+        return {
+          code: `AR-${String(index + 1).padStart(3, "0")}`,
+          name,
+          category: patternCategory(name),
+          format: extension.toUpperCase(),
+          img: file.download_url,
+          fileName: file.name,
+        };
+      }
+      function unique(key) {
+        return ["全部", ...new Set(patterns.map((pattern) => pattern[key]))];
+      }
+      function setFilter(key, value) {
+        state[key] = value;
+        renderAll();
+      }
+      function renderChips(id, key) {
+        document.getElementById(id).innerHTML = unique(key)
+          .map(
+            (value) =>
+              `<button class="chip ${state[key] === value ? "active" : ""}" data-filter-key="${key}" data-filter-value="${escapeHtml(value)}">${escapeHtml(value)}</button>`,
+          )
+          .join("");
+      }
+      function match(pattern) {
+        const query = document
+          .getElementById("searchInput")
+          .value.trim()
+          .toLowerCase();
+        return (
+          ["category", "format"].every(
+            (key) => state[key] === "全部" || pattern[key] === state[key],
+          ) &&
+          (!query ||
+            `${pattern.code}${pattern.name}${pattern.category}${pattern.format}${pattern.fileName}`
+              .toLowerCase()
+              .includes(query))
+        );
+      }
+      function renderPatterns() {
+        const list = patterns.filter(match);
+        document.getElementById("resultCount").textContent =
+          `共展示 ${list.length} / ${patterns.length} 个已上传纹样`;
+        document.getElementById("patternGrid").innerHTML =
+          list
+            .map(
+              (pattern) =>
+                `<article class="card" data-pattern-code="${pattern.code}" tabindex="0"><img src="${escapeHtml(pattern.img)}" alt="${escapeHtml(pattern.name)}" loading="lazy"><div class="card-body"><div class="code">${pattern.code}</div><h3>${escapeHtml(pattern.name)}</h3><div class="meta"><span>${escapeHtml(pattern.category)}</span><span>${escapeHtml(pattern.format)}</span></div></div></article>`,
+            )
+            .join("") ||
+          '<div class="empty">暂无匹配纹样，请放宽筛选条件。</div>';
+        if (list.length) showDetail(list[0].code);
+        else document.getElementById("patternDetail").innerHTML = "";
+      }
+      function showDetail(code) {
+        const pattern = patterns.find((item) => item.code === code);
+        if (!pattern) return;
+        document.getElementById("patternDetail").innerHTML =
+          `<img src="${escapeHtml(pattern.img)}" alt="${escapeHtml(pattern.name)}"><div><div class="code">${pattern.code}</div><h2>${escapeHtml(pattern.name)}</h2><p>该名称直接取自你上传的文件 <strong>${escapeHtml(pattern.fileName)}</strong>，网页不会再使用旧纹样名称替代。</p><p><strong>主题分类：</strong>${escapeHtml(pattern.category)}　<strong>图片格式：</strong>${escapeHtml(pattern.format)}</p><p><strong>产品建议：</strong>文化衫、丝巾、书签、香囊、礼盒包装、数字授权。</p></div>`;
+      }
+      function renderAll() {
+        renderChips("categoryFilters", "category");
+        renderChips("formatFilters", "format");
+        renderPatterns();
+      }
+      async function fetchUploadedFiles() {
+        const errors = [];
+        for (const source of PATTERN_SOURCES) {
+          try {
+            const response = await fetch(source.url, {
+              headers: { Accept: "application/vnd.github+json" },
+            });
+            if (!response.ok) throw new Error(`${response.status}`);
+            return {
+              files: source.normalize(await response.json()),
+              source: source.name,
+            };
+          } catch (error) {
+            errors.push(`${source.name}: ${error.message}`);
+          }
+        }
+        throw new Error(errors.join("; "));
+      }
+      async function loadUploadedPatterns() {
+        const note = document.getElementById("syncNote");
+        note.textContent = "正在读取你上传的纹样文件……";
+        try {
+          const synced = await fetchUploadedFiles();
+          patterns = synced.files
+            .filter(
+              (file) =>
+                file.type === "file" &&
+                IMAGE_EXTENSIONS.has(file.name.split(".").pop().toLowerCase()),
+            )
+            .sort((left, right) =>
+              left.name.localeCompare(right.name, "zh-CN", { numeric: true }),
+            )
+            .map(toPattern);
+          if (!patterns.length)
+            throw new Error("generate 文件夹中没有可显示的图片");
+          note.textContent = `已通过 ${synced.source} 同步 ${patterns.length} 个正式纹样；分类由真实文件名自动生成。`;
+          renderAll();
+        } catch (error) {
+          console.error(error);
+          note.innerHTML =
+            '暂时无法读取 generate 文件夹。请确认文件夹位于 main 分支的 <code>assets/images/patterns/generate/</code>。 <button class="chip" id="retrySync">重新同步</button>';
+          document.getElementById("resultCount").textContent = "纹样同步失败";
+          document.getElementById("patternGrid").innerHTML =
+            '<div class="empty">无法取得上传文件列表，请检查路径或稍后重试。</div>';
+          document.getElementById("patternDetail").innerHTML = "";
+          document
+            .getElementById("retrySync")
+            ?.addEventListener("click", loadUploadedPatterns);
+        }
+      }
+      document
+        .getElementById("searchInput")
+        .addEventListener("input", renderPatterns);
+      document.querySelector(".sidebar").addEventListener("click", (event) => {
+        const chip = event.target.closest("[data-filter-key]");
+        if (chip) setFilter(chip.dataset.filterKey, chip.dataset.filterValue);
+      });
+      document
+        .getElementById("patternGrid")
+        .addEventListener("click", (event) => {
+          const card = event.target.closest("[data-pattern-code]");
+          if (card) showDetail(card.dataset.patternCode);
+        });
+      loadUploadedPatterns();
+    </script>
+    <script>
+      const navigationBar = document.querySelector("header");
+      const syncNavigationBar = () =>
+        navigationBar?.classList.toggle("is-scrolled", window.scrollY > 18);
+      window.addEventListener("scroll", syncNavigationBar, { passive: true });
+      syncNavigationBar();
+    </script>
+    <script>
+      document.addEventListener(
+        "click",
+        (event) => {
+          const shopLink = event.target.closest('a[href="shop.html"]');
+          if (!shopLink) return;
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          const transition = document.getElementById("shopTransition");
+          transition?.classList.add("active");
+          setTimeout(() => (window.location.href = "shop.html"), 1120);
+        },
+        true,
+      );
+    </script>
+  </body>
+</html>
