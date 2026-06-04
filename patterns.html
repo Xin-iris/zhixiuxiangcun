@@ -406,33 +406,43 @@
       <span>Embroidery Pattern Archive</span>
       <h1>纹样数据库</h1>
       <p>
-        自动同步 generated
-        文件夹中的全部中文命名正式纹样，以图片文件名作为纹样名称，并根据名称特征生成主题分类。支持按名称、编号和分类检索。
+        收录 generated
+        文件夹中的正式纹样，可通过纹样种类、寓意、主色调、工艺特点筛选，也可以直接搜索纹样代码或名称。
       </p>
     </section>
     <main class="db-layout">
       <aside class="sidebar">
-        <h3>真实纹样分类</h3>
+        <h3>筛选纹样</h3>
         <div class="filter-group">
-          <label>纹样主题</label>
-          <div class="chips" id="categoryFilters"></div>
+          <label>纹样种类</label>
+          <div class="chips" id="typeFilters"></div>
         </div>
         <div class="filter-group">
-          <label>图片格式</label>
-          <div class="chips" id="formatFilters"></div>
+          <label>主要寓意</label>
+          <div class="chips" id="meaningFilters"></div>
         </div>
-        <p class="sync-note" id="syncNote">正在读取你上传的纹样文件……</p>
+        <div class="filter-group">
+          <label>主色调</label>
+          <div class="chips" id="colorFilters"></div>
+        </div>
+        <div class="filter-group">
+          <label>工艺特点</label>
+          <div class="chips" id="craftFilters"></div>
+        </div>
+        <p class="sync-note" id="syncNote">
+          已载入 generated 文件夹中的正式纹样。
+        </p>
       </aside>
       <section>
         <div class="search">
           <input
             id="searchInput"
-            placeholder="搜索新上传的纹样名称、编号或主题分类……"
+            placeholder="搜索 AR-001、牡丹、祥云、守护、安康……"
           /><button onclick="renderPatterns()">搜索</button>
         </div>
         <div class="result-head">
           <strong id="resultCount">正在同步纹样……</strong
-          ><span>所有纹样名称均取自 generated 文件夹中的中文 PNG 文件</span>
+          ><span>点击纹样卡片查看分类、寓意与工艺详情</span>
         </div>
         <div class="grid" id="patternGrid"></div>
         <div class="detail" id="patternDetail"></div>
@@ -441,19 +451,13 @@
     <script src="assets/js/pattern-manifest.js"></script>
     <script>
       const uploadedPatternFiles = window.UPLOADED_PATTERN_FILES || [];
-      const IMAGE_EXTENSIONS = new Set(["png"]);
-      const CATEGORY_RULES = [
-        ["花卉植物", /花|牡丹|莲|梅|兰|竹|菊|叶|藤|草|枝|石榴|谷|穗|果|团花/],
-        ["动物灵兽", /鸟|蝶|蝴蝶|鱼|龙|凤|鹿|羊|牛|虎|鹤|兽|雀|燕/],
-        ["自然山水", /山|水|河|江|云|雪|日|月|星|海|火|雷|雨/],
-        [
-          "吉祥符号",
-          /八宝|吉祥|团结|纳福|瑞气|安康|回|旋|带|几何|菱|方|圆|连|结|环|格/,
-        ],
-        ["人物生活", /人|舞|笛|农|村|家|节|庆|丰收/],
-      ];
       let patterns = [];
-      const state = { category: "全部", format: "全部" };
+      const state = {
+        type: "全部",
+        meaning: "全部",
+        color: "全部",
+        craft: "全部",
+      };
 
       function escapeHtml(value) {
         return String(value).replace(
@@ -471,19 +475,14 @@
       function patternName(fileName) {
         return fileName.replace(/\.[^.]+$/, "").trim();
       }
-      function patternCategory(name) {
-        return (
-          CATEGORY_RULES.find(([, rule]) => rule.test(name))?.[0] || "传统纹样"
-        );
-      }
       function toPattern(file, index) {
-        const extension = file.name.split(".").pop().toLowerCase();
-        const name = patternName(file.name);
         return {
           code: `AR-${String(index + 1).padStart(3, "0")}`,
-          name,
-          category: patternCategory(name),
-          format: extension.toUpperCase(),
+          name: patternName(file.name),
+          type: file.type,
+          meaning: file.meaning,
+          color: file.color,
+          craft: file.craft,
           img: file.url,
           fileName: file.name,
         };
@@ -509,11 +508,11 @@
           .value.trim()
           .toLowerCase();
         return (
-          ["category", "format"].every(
+          ["type", "meaning", "color", "craft"].every(
             (key) => state[key] === "全部" || pattern[key] === state[key],
           ) &&
           (!query ||
-            `${pattern.code}${pattern.name}${pattern.category}${pattern.format}${pattern.fileName}`
+            `${pattern.code}${pattern.name}${pattern.type}${pattern.meaning}${pattern.color}${pattern.craft}${pattern.fileName}`
               .toLowerCase()
               .includes(query))
         );
@@ -526,7 +525,7 @@
           list
             .map(
               (pattern) =>
-                `<article class="card" data-pattern-code="${pattern.code}" tabindex="0"><img src="${escapeHtml(pattern.img)}" alt="${escapeHtml(pattern.name)}" loading="lazy"><div class="card-body"><div class="code">${pattern.code}</div><h3>${escapeHtml(pattern.name)}</h3><div class="meta"><span>${escapeHtml(pattern.category)}</span><span>${escapeHtml(pattern.format)}</span></div></div></article>`,
+                `<article class="card" data-pattern-code="${pattern.code}" tabindex="0"><img src="${escapeHtml(pattern.img)}" alt="${escapeHtml(pattern.name)}" loading="lazy"><div class="card-body"><div class="code">${pattern.code}</div><h3>${escapeHtml(pattern.name)}</h3><div class="meta"><span>${escapeHtml(pattern.type)}</span><span>${escapeHtml(pattern.meaning)}</span><span>${escapeHtml(pattern.color)}</span><span>${escapeHtml(pattern.craft)}</span></div></div></article>`,
             )
             .join("") ||
           '<div class="empty">暂无匹配纹样，请放宽筛选条件。</div>';
@@ -537,34 +536,20 @@
         const pattern = patterns.find((item) => item.code === code);
         if (!pattern) return;
         document.getElementById("patternDetail").innerHTML =
-          `<img src="${escapeHtml(pattern.img)}" alt="${escapeHtml(pattern.name)}"><div><div class="code">${pattern.code}</div><h2>${escapeHtml(pattern.name)}</h2><p>该名称直接取自你上传的文件 <strong>${escapeHtml(pattern.fileName)}</strong>，网页不会再使用旧纹样名称替代。</p><p><strong>主题分类：</strong>${escapeHtml(pattern.category)}　<strong>图片格式：</strong>${escapeHtml(pattern.format)}</p><p><strong>产品建议：</strong>文化衫、丝巾、书签、香囊、礼盒包装、数字授权。</p></div>`;
+          `<img src="${escapeHtml(pattern.img)}" alt="${escapeHtml(pattern.name)}"><div><div class="code">${pattern.code}</div><h2>${escapeHtml(pattern.name)}</h2><p>该名称直接取自你上传的文件 <strong>${escapeHtml(pattern.fileName)}</strong>，网页不会再使用旧纹样名称替代。</p><p><strong>种类：</strong>${escapeHtml(pattern.type)}　<strong>寓意：</strong>${escapeHtml(pattern.meaning)}　<strong>色调：</strong>${escapeHtml(pattern.color)}　<strong>工艺：</strong>${escapeHtml(pattern.craft)}</p><p><strong>产品建议：</strong>文化衫、丝巾、书签、香囊、礼盒包装、数字授权。</p></div>`;
       }
       function renderAll() {
-        renderChips("categoryFilters", "category");
-        renderChips("formatFilters", "format");
+        renderChips("typeFilters", "type");
+        renderChips("meaningFilters", "meaning");
+        renderChips("colorFilters", "color");
+        renderChips("craftFilters", "craft");
         renderPatterns();
       }
       function loadUploadedPatterns() {
-        const note = document.getElementById("syncNote");
-        patterns = uploadedPatternFiles
-          .filter((file) =>
-            IMAGE_EXTENSIONS.has(file.name.split(".").pop().toLowerCase()),
-          )
-          .sort((left, right) =>
-            left.name.localeCompare(right.name, "zh-CN", { numeric: true }),
-          )
-          .map(toPattern);
-        if (patterns.length) {
-          note.textContent = `已从网站资源同步 ${patterns.length} 个正式纹样；分类由真实文件名自动生成。`;
-          renderAll();
-          return;
-        }
-        note.textContent =
-          "尚未在 generated 文件夹中找到中文命名的 PNG 纹样。请确认新纹样位于 assets/images/patterns/generated/，并等待 GitHub Pages 完成部署。";
-        document.getElementById("resultCount").textContent = "暂未找到纹样";
-        document.getElementById("patternGrid").innerHTML =
-          '<div class="empty">部署完成后，generated 文件夹中的全部中文命名 PNG 纹样会自动显示在这里。</div>';
-        document.getElementById("patternDetail").innerHTML = "";
+        patterns = uploadedPatternFiles.map(toPattern);
+        document.getElementById("syncNote").textContent =
+          `已载入 ${patterns.length} 个正式纹样，可组合使用多项筛选。`;
+        renderAll();
       }
       document
         .getElementById("searchInput")
