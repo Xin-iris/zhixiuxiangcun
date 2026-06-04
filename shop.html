@@ -851,6 +851,7 @@
         <button class="checkout" onclick="closeOrder()">完成演示</button>
       </div>
     </div>
+    <script src="assets/js/pattern-manifest.js"></script>
     <script>
       const products = [
         {
@@ -973,15 +974,18 @@
           price: 3999,
           tag: "STUDY",
         },
-        {
-          id: 16,
-          cat: "纹样授权",
-          name: "纹样版权授权咨询",
-          img: "assets/images/patterns/generate/日月同辉纹.png?v=20260604-user-patterns",
-          price: 0,
-          tag: "LICENSE",
-        },
       ];
+      const uploadedPatternProducts = (window.UPLOADED_PATTERN_FILES || []).map(
+        (file, index) => ({
+          id: 1000 + index,
+          cat: "纹样授权",
+          name: `${file.name.replace(/\.[^.]+$/, "")} · 授权咨询`,
+          img: file.url,
+          price: 0,
+          tag: "PATTERN",
+        }),
+      );
+      products.push(...uploadedPatternProducts);
       const cart = [];
       let active = "全部商品";
       const cats = [

@@ -438,32 +438,9 @@
         <div class="detail" id="patternDetail"></div>
       </section>
     </main>
+    <script src="assets/js/pattern-manifest.js"></script>
     <script>
-      const PATTERN_DIRECTORY = "assets/images/patterns/generate/";
-      const PATTERN_SOURCES = [
-        {
-          name: "GitHub",
-          url: "https://api.github.com/repos/Xin-iris/zhixiuxiangcun/contents/assets/images/patterns/generate?ref=main",
-          normalize: (files) =>
-            files.map((file) => ({
-              name: file.name,
-              type: file.type,
-              download_url: file.download_url,
-            })),
-        },
-        {
-          name: "jsDelivr",
-          url: "https://data.jsdelivr.com/v1/package/gh/Xin-iris/zhixiuxiangcun@main/flat",
-          normalize: (data) =>
-            data.files
-              .filter((file) => file.name.startsWith(`/${PATTERN_DIRECTORY}`))
-              .map((file) => ({
-                name: file.name.split("/").pop(),
-                type: "file",
-                download_url: `https://cdn.jsdelivr.net/gh/Xin-iris/zhixiuxiangcun@main${file.name}`,
-              })),
-        },
-      ];
+      const uploadedPatternFiles = window.UPLOADED_PATTERN_FILES || [];
       const IMAGE_EXTENSIONS = new Set([
         "png",
         "jpg",
@@ -512,7 +489,7 @@
           name,
           category: patternCategory(name),
           format: extension.toUpperCase(),
-          img: file.download_url,
+          img: file.url,
           fileName: file.name,
         };
       }
@@ -572,55 +549,27 @@
         renderChips("formatFilters", "format");
         renderPatterns();
       }
-      async function fetchUploadedFiles() {
-        const errors = [];
-        for (const source of PATTERN_SOURCES) {
-          try {
-            const response = await fetch(source.url, {
-              headers: { Accept: "application/vnd.github+json" },
-            });
-            if (!response.ok) throw new Error(`${response.status}`);
-            return {
-              files: source.normalize(await response.json()),
-              source: source.name,
-            };
-          } catch (error) {
-            errors.push(`${source.name}: ${error.message}`);
-          }
-        }
-        throw new Error(errors.join("; "));
-      }
-      async function loadUploadedPatterns() {
+      function loadUploadedPatterns() {
         const note = document.getElementById("syncNote");
-        note.textContent = "正在读取你上传的纹样文件……";
-        try {
-          const synced = await fetchUploadedFiles();
-          patterns = synced.files
-            .filter(
-              (file) =>
-                file.type === "file" &&
-                IMAGE_EXTENSIONS.has(file.name.split(".").pop().toLowerCase()),
-            )
-            .sort((left, right) =>
-              left.name.localeCompare(right.name, "zh-CN", { numeric: true }),
-            )
-            .map(toPattern);
-          if (!patterns.length)
-            throw new Error("generate 文件夹中没有可显示的图片");
-          note.textContent = `已通过 ${synced.source} 同步 ${patterns.length} 个正式纹样；分类由真实文件名自动生成。`;
+        patterns = uploadedPatternFiles
+          .filter((file) =>
+            IMAGE_EXTENSIONS.has(file.name.split(".").pop().toLowerCase()),
+          )
+          .sort((left, right) =>
+            left.name.localeCompare(right.name, "zh-CN", { numeric: true }),
+          )
+          .map(toPattern);
+        if (patterns.length) {
+          note.textContent = `已从网站资源同步 ${patterns.length} 个正式纹样；分类由真实文件名自动生成。`;
           renderAll();
-        } catch (error) {
-          console.error(error);
-          note.innerHTML =
-            '暂时无法读取 generate 文件夹。请确认文件夹位于 main 分支的 <code>assets/images/patterns/generate/</code>。 <button class="chip" id="retrySync">重新同步</button>';
-          document.getElementById("resultCount").textContent = "纹样同步失败";
-          document.getElementById("patternGrid").innerHTML =
-            '<div class="empty">无法取得上传文件列表，请检查路径或稍后重试。</div>';
-          document.getElementById("patternDetail").innerHTML = "";
-          document
-            .getElementById("retrySync")
-            ?.addEventListener("click", loadUploadedPatterns);
+          return;
         }
+        note.textContent =
+          "尚未在 generate 文件夹中找到纹样图片。请将图片上传到 main 分支后等待 GitHub Pages 完成部署。";
+        document.getElementById("resultCount").textContent = "暂未找到纹样";
+        document.getElementById("patternGrid").innerHTML =
+          '<div class="empty">部署完成后，generate 文件夹中的全部纹样会自动显示在这里。</div>';
+        document.getElementById("patternDetail").innerHTML = "";
       }
       document
         .getElementById("searchInput")

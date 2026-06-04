@@ -532,7 +532,7 @@
           <div class="paper" id="paper">
             <img
               id="generatedImg"
-              src="assets/images/patterns/generate/蝶榴新生纹.png?v=20260604-user-patterns"
+              src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
               alt="生成纹样"
             />
           </div>
@@ -547,27 +547,7 @@
           上传或选择纹样样本后，工作室会以扫描动效呈现色彩、针法、构图和寓意标签的识别过程，生成可入库的纹样档案。
         </p>
         <div class="control-row">
-          <select id="sample">
-            <option
-              value="assets/images/patterns/generate/嘉绒花云团纹.png?v=20260604-user-patterns"
-            >
-              嘉绒花云团纹
-            </option>
-            <option
-              value="assets/images/patterns/generate/雪山守护纹.png?v=20260604-user-patterns"
-            >
-              雪山守护纹
-            </option>
-            <option
-              value="assets/images/patterns/generate/水流丰收纹.png?v=20260604-user-patterns"
-            >
-              水流丰收纹
-            </option>
-            <option
-              value="assets/images/patterns/generate/蝶榴新生纹.png?v=20260604-user-patterns"
-            >
-              蝶榴新生纹
-            </option></select
+          <select id="sample"></select
           ><button class="btn ghost" onclick="useGenerated()">
             使用生成纹样
           </button>
@@ -577,7 +557,7 @@
           <div class="scan-image">
             <img
               id="scanImg"
-              src="assets/images/patterns/generate/嘉绒花云团纹.png?v=20260604-user-patterns"
+              src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
               alt="待识别纹样"
             />
             <div class="scan-grid"></div>
@@ -589,11 +569,11 @@
         <div class="result-card" id="resultCard">
           <img
             id="resultImg"
-            src="assets/images/patterns/generate/嘉绒花云团纹.png?v=20260604-user-patterns"
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
             alt="识别结果"
           />
           <div>
-            <strong id="resultTitle">AR-101 嘉绒花云团纹</strong>
+            <strong id="resultTitle">等待识别纹样</strong>
             <p id="resultDesc">完成扫描后将显示置信度、标签和入库编号。</p>
             <div class="tags"><span>待识别</span><span>待入库</span></div>
           </div>
@@ -602,30 +582,35 @@
     </main>
     <section class="database-strip">
       <h2>工作室可调取纹样</h2>
-      <div class="mini-grid">
-        <img
-          src="assets/images/patterns/generate/羌笛回旋纹.png?v=20260604-user-patterns"
-          alt="羌笛回旋纹"
-        /><img
-          src="assets/images/patterns/generate/金线牡丹纹.png?v=20260604-user-patterns"
-          alt="金线牡丹纹"
-        /><img
-          src="assets/images/patterns/generate/羊角护佑纹.png?v=20260604-user-patterns"
-          alt="羊角护佑纹"
-        /><img
-          src="assets/images/patterns/generate/星河织带纹.png?v=20260604-user-patterns"
-          alt="星河织带纹"
-        />
-      </div>
+      <div class="mini-grid" id="studioPatternGrid"></div>
     </section>
+    <script src="assets/js/pattern-manifest.js"></script>
     <script>
-      const generated = [
-        "assets/images/patterns/generate/蝶榴新生纹.png?v=20260604-user-patterns",
-        "assets/images/patterns/generate/金线牡丹纹.png?v=20260604-user-patterns",
-        "assets/images/patterns/generate/日月同辉纹.png?v=20260604-user-patterns",
-        "assets/images/patterns/generate/莲华净境纹.png?v=20260604-user-patterns",
-      ];
-      let latest = generated[0];
+      const uploadedPatterns = window.UPLOADED_PATTERN_FILES || [];
+      const generated = uploadedPatterns.length
+        ? uploadedPatterns.map((file) => file.url)
+        : [
+            "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==",
+          ];
+      const patternName = (url) => {
+        const file = uploadedPatterns.find((item) => item.url === url);
+        return file ? file.name.replace(/\.[^.]+$/, "") : "示例纹样";
+      };
+      const sample = document.getElementById("sample");
+      sample.innerHTML = generated
+        .map((url) => `<option value="${url}">${patternName(url)}</option>`)
+        .join("");
+      const initialPattern = generated[0];
+      ["generatedImg", "scanImg", "resultImg"].forEach((id) => {
+        const image = document.getElementById(id);
+        image.src = initialPattern;
+        image.alt = patternName(initialPattern);
+      });
+      document.getElementById("studioPatternGrid").innerHTML = uploadedPatterns
+        .slice(0, 8)
+        .map((file) => `<img src="${file.url}" alt="${patternName(file.url)}">`)
+        .join("");
+      let latest = initialPattern;
       function runSteps(logEl, progressEl, steps, done) {
         let i = 0;
         logEl.textContent = "";
@@ -687,7 +672,7 @@
           ],
           () => {
             document.getElementById("resultTitle").textContent =
-              "AR-LAB 纹样档案已生成";
+              `AR-LAB · ${patternName(sample)}`;
             document.getElementById("resultDesc").textContent =
               "置信度 96.8%，标签：生成纹样、可授权、适合文创开发。";
             document.getElementById("resultCard").classList.add("active");
