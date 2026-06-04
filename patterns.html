@@ -34,14 +34,15 @@
         z-index: -1;
       }
       header {
-        height: 74px;
+        min-height: 80px;
         display: flex;
-        align-items: center;
         justify-content: space-between;
-        padding: 12px 6%;
+        align-items: center;
+        padding: 12px 5% 12px 3.8%;
         position: sticky;
+        width: 100%;
         top: 0;
-        z-index: 20;
+        z-index: 1000;
         background: linear-gradient(
           180deg,
           rgba(6, 11, 21, 0.78),
@@ -67,23 +68,25 @@
       .logo {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 13px;
         color: var(--gold);
         text-decoration: none;
+        font-size: 1.18rem;
         font-weight: 900;
-        letter-spacing: 2px;
+        letter-spacing: 2.5px;
+        white-space: nowrap;
       }
       .logo img {
         display: block;
-        width: 76px;
-        height: 52px;
+        width: 82px;
+        height: 56px;
         object-fit: contain;
       }
       nav a {
         color: var(--muted);
         text-decoration: none;
-        margin-left: 20px;
-        font-size: 0.9em;
+        margin-left: 22px;
+        font-size: 0.92rem;
       }
       nav a.active,
       nav a:hover {
@@ -296,9 +299,86 @@
           width: 100%;
         }
       }
+
+      .shop-transition {
+        position: fixed;
+        inset: 0;
+        z-index: 5000;
+        display: grid;
+        place-items: center;
+        pointer-events: none;
+        opacity: 0;
+        background:
+          radial-gradient(
+            circle at 50% 48%,
+            rgba(197, 160, 89, 0.2),
+            transparent 30%
+          ),
+          #050914;
+        transition: opacity 0.42s ease;
+      }
+      .shop-transition.active {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .shop-transition-brand {
+        display: grid;
+        justify-items: center;
+        gap: 12px;
+        opacity: 0;
+        transform: translateY(14px) scale(0.94);
+      }
+      .shop-transition.active .shop-transition-brand {
+        animation: shopBrandReveal 1.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+      .shop-transition img {
+        width: clamp(150px, 18vw, 250px);
+        max-height: 250px;
+        object-fit: contain;
+      }
+      .shop-transition strong {
+        color: var(--gold2, #f3d58b);
+        font-size: clamp(1.5rem, 3vw, 2.5rem);
+        letter-spacing: 0.42em;
+        padding-left: 0.42em;
+      }
+      .shop-transition small {
+        color: rgba(255, 255, 255, 0.58);
+        letter-spacing: 0.35em;
+        padding-left: 0.35em;
+      }
+      @keyframes shopBrandReveal {
+        0% {
+          opacity: 0;
+          transform: translateY(14px) scale(0.94);
+          filter: blur(10px);
+        }
+        45%,
+        72% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+          filter: blur(0);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-8px) scale(1.035);
+          filter: blur(5px);
+        }
+      }
     </style>
   </head>
   <body>
+    <div class="shop-transition" id="shopTransition" aria-hidden="true">
+      <div class="shop-transition-brand">
+        <img
+          src="assets/images/brand/logo.png?v=20260604-user-logo"
+          alt="阿热灵绣 logo"
+        />
+        <strong>阿热灵绣</strong>
+        <small>ARE LINGXIU · CRAFT BOUTIQUE</small>
+      </div>
+    </div>
+
     <header>
       <a href="index.html" class="logo"
         ><img
@@ -586,6 +666,21 @@
         navigationBar?.classList.toggle("is-scrolled", window.scrollY > 18);
       window.addEventListener("scroll", syncNavigationBar, { passive: true });
       syncNavigationBar();
+    </script>
+    <script>
+      document.addEventListener(
+        "click",
+        (event) => {
+          const shopLink = event.target.closest('a[href="shop.html"]');
+          if (!shopLink) return;
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          const transition = document.getElementById("shopTransition");
+          transition?.classList.add("active");
+          setTimeout(() => (window.location.href = "shop.html"), 1120);
+        },
+        true,
+      );
     </script>
   </body>
 </html>
