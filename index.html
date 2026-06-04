@@ -387,8 +387,13 @@
       }
       .pattern-preview {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 14px;
+        grid-template-columns: 1.25fr 0.75fr;
+        grid-template-rows: repeat(2, minmax(150px, 1fr));
+        gap: 16px;
+        padding: 18px;
+      }
+      .pattern-preview a:first-child {
+        grid-row: 1 / 3;
       }
       .pattern-preview a {
         text-decoration: none;
@@ -405,9 +410,18 @@
       }
       .pattern-preview img {
         width: 100%;
-        aspect-ratio: 1/1;
+        height: 100%;
+        min-height: 150px;
         object-fit: cover;
         display: block;
+        filter: saturate(1.08) contrast(1.04);
+        transition: 0.45s ease;
+      }
+      .pattern-preview a:first-child img {
+        min-height: 332px;
+      }
+      .pattern-preview a:hover img {
+        transform: scale(1.045);
       }
       .pattern-preview b {
         display: block;
@@ -597,18 +611,18 @@
       <section class="lab-showcase">
         <div class="lab-copy">
           <div class="eyebrow">Pattern Database</div>
-          <h2>从纹样库到产品库的全链路</h2>
+          <h2>让传统纹样走进当代生活</h2>
           <p>
-            新增“纹样数据库”页面，支持按种类、寓意、颜色、工艺与代码/名称检索，为定制引擎和商城提供统一素材来源。
+            从纹样采集、智能识别与设计转译，到文创开发、研学体验和品牌授权，让每一枚非遗纹样都拥有可被看见、理解与使用的新生命。
           </p>
           <div class="lab-step">
-            <strong>纹样检索与标签筛选</strong><span>已补全</span>
+            <strong>纹样档案与文化释义</strong><span>可检索</span>
           </div>
           <div class="lab-step">
-            <strong>AI 生成与智能识别</strong><span>沉浸交互</span>
+            <strong>智能生成与设计转译</strong><span>可体验</span>
           </div>
           <div class="lab-step">
-            <strong>商城分区陈列与加购</strong><span>高级改版</span>
+            <strong>文创开发与服务落地</strong><span>可转化</span>
           </div>
         </div>
         <div class="pattern-preview" id="patternPreview"></div>
@@ -653,40 +667,34 @@
       });
       const activities = [
         {
-          cls: "",
-          img: "assets/images/backgrounds/photo_bg.jpg",
-          title: "民族风情写真",
-          text: "妆造、服饰、拍摄与修图一站式体验。",
+          img: "assets/images/products/图片11.jpg",
+          title: "非遗文化体验",
+          text: "在真实场景中感受藏羌刺绣的色彩、针法与文化故事。",
         },
         {
-          cls: "",
-          img: "assets/images/backgrounds/scenic_study.jpg",
-          title: "川西非遗研学",
-          text: "针法体验、纹样讲解、作品带走。",
+          img: "assets/images/products/二期文创2.jpg",
+          title: "文创共创工坊",
+          text: "从传统纹样出发，共同完成适合当代生活的文创设计。",
         },
         {
-          cls: "",
-          img: "assets/images/backgrounds/toy_bg.jpg",
-          title: "棉花娃娃 DIY",
-          text: "把藏羌服饰元素做成可收藏潮玩。",
+          img: "assets/images/products/二期文创3.jpg",
+          title: "纹样设计服务",
+          text: "围绕品牌、包装与空间应用提供纹样转译和设计支持。",
         },
         {
-          cls: "",
-          img: "assets/images/backgrounds/clothes_bg.jpg",
-          title: "文化衫定制",
-          text: "从数据库调取纹样，快速生成服饰方案。",
+          img: "assets/images/products/二期文创4.jpg",
+          title: "非遗研学课程",
+          text: "把纹样讲解、手作体验与作品展示融入研学旅程。",
         },
         {
-          cls: "",
-          img: "assets/images/backgrounds/base.jpg",
-          title: "研学基地共建",
-          text: "课程、教材、传承人资源协同落地。",
+          img: "assets/images/products/藏羌盲盒.jpg",
+          title: "藏羌潮玩体验",
+          text: "以盲盒和收藏产品连接年轻用户与传统文化。",
         },
         {
-          cls: "",
-          img: "assets/images/backgrounds/copyright_bg.jpg",
-          title: "纹样版权授权",
-          text: "为品牌、包装与文创开发提供授权咨询。",
+          img: "assets/images/products/棉花娃娃藏族女.jpg",
+          title: "民族娃娃定制",
+          text: "将民族服饰与纹样细节转化为可收藏、可陪伴的作品。",
         },
       ];
       document.getElementById("activityRail").innerHTML = [
