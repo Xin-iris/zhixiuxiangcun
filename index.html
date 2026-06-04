@@ -363,6 +363,73 @@
         border-radius: 24px;
         padding: 34px;
       }
+      .lab-copy {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px;
+        background:
+          radial-gradient(
+            circle at 15% 12%,
+            rgba(197, 160, 89, 0.14),
+            transparent 32%
+          ),
+          var(--panel);
+      }
+      .lab-story {
+        margin: 4px 0 22px;
+        padding: 20px 22px;
+        border-left: 2px solid var(--gold);
+        border-radius: 0 16px 16px 0;
+        background: rgba(255, 255, 255, 0.035);
+        color: rgba(255, 255, 255, 0.78);
+        line-height: 1.9;
+      }
+      .lab-metrics {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin: 22px 0;
+      }
+      .lab-metric {
+        padding: 17px 12px;
+        border: 1px solid rgba(197, 160, 89, 0.2);
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.035);
+      }
+      .lab-metric strong,
+      .lab-metric span {
+        display: block;
+      }
+      .lab-metric strong {
+        color: var(--gold2);
+        font-size: 1.05rem;
+        margin-bottom: 4px;
+      }
+      .lab-metric span {
+        color: var(--muted);
+        font-size: 0.78rem;
+      }
+      .lab-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 12px;
+      }
+      .lab-actions a {
+        padding: 12px 20px;
+        border: 1px solid rgba(197, 160, 89, 0.42);
+        border-radius: 999px;
+        color: var(--gold2);
+        text-decoration: none;
+        font-weight: 800;
+        transition: 0.3s;
+      }
+      .lab-actions a:first-child,
+      .lab-actions a:hover {
+        color: #07101f;
+        background: linear-gradient(135deg, var(--gold2), var(--gold));
+      }
       .eyebrow {
         color: var(--gold2);
         letter-spacing: 4px;
@@ -613,8 +680,11 @@
           <div class="eyebrow">Pattern Database</div>
           <h2>让传统纹样走进当代生活</h2>
           <p>
-            从纹样采集、智能识别与设计转译，到文创开发、研学体验和品牌授权，让每一枚非遗纹样都拥有可被看见、理解与使用的新生命。
+            我们以阿热灵绣的传统针法、色彩语言与地域记忆为起点，将散落在服饰、器物和口述故事中的纹样整理为可检索、可理解、可继续创造的数字档案。
           </p>
+          <div class="lab-story">
+            纹样不只是装饰，也是关于山河、祝福与生活方式的文化文本。通过智绣工作室，传统图案能够被识别、解读和重新组合，并自然进入文创产品、研学课程、空间设计与品牌合作，让非遗真正融入今天的生活。
+          </div>
           <div class="lab-step">
             <strong>纹样档案与文化释义</strong><span>可检索</span>
           </div>
@@ -623,6 +693,21 @@
           </div>
           <div class="lab-step">
             <strong>文创开发与服务落地</strong><span>可转化</span>
+          </div>
+          <div class="lab-metrics">
+            <div class="lab-metric">
+              <strong>文化可读</strong><span>名称、寓意与工艺档案</span>
+            </div>
+            <div class="lab-metric">
+              <strong>设计可用</strong><span>生成、识别与应用转译</span>
+            </div>
+            <div class="lab-metric">
+              <strong>价值可续</strong><span>文创、研学与品牌合作</span>
+            </div>
+          </div>
+          <div class="lab-actions">
+            <a href="patterns.html">浏览纹样数据库</a>
+            <a href="custom.html">进入智绣工作室</a>
           </div>
         </div>
         <div class="pattern-preview" id="patternPreview"></div>
@@ -667,32 +752,32 @@
       });
       const activities = [
         {
-          img: "assets/images/products/民族写真.png",
-          title: "民族写真",
+          img: "assets/images/products/图片11.jpg",
+          title: "非遗文化体验",
           text: "在真实场景中感受藏羌刺绣的色彩、针法与文化故事。",
         },
         {
-          img: "assets/images/products/文化衫定制.png",
-          title: "文化衫定制",
+          img: "assets/images/products/二期文创2.jpg",
+          title: "文创共创工坊",
           text: "从传统纹样出发，共同完成适合当代生活的文创设计。",
         },
         {
-          img: "assets/images/products/纹样授权.png",
-          title: "纹样授权服务",
+          img: "assets/images/products/二期文创3.jpg",
+          title: "纹样设计服务",
           text: "围绕品牌、包装与空间应用提供纹样转译和设计支持。",
         },
         {
-          img: "assets/images/products/研学共建.png",
+          img: "assets/images/products/二期文创4.jpg",
           title: "非遗研学课程",
           text: "把纹样讲解、手作体验与作品展示融入研学旅程。",
         },
         {
-          img: "assets/images/products/盲盒文创产品图.png",
+          img: "assets/images/products/藏羌盲盒.jpg",
           title: "藏羌潮玩体验",
           text: "以盲盒和收藏产品连接年轻用户与传统文化。",
         },
         {
-          img: "assets/images/products/娃娃藏族男.png",
+          img: "assets/images/products/棉花娃娃藏族女.jpg",
           title: "民族娃娃定制",
           text: "将民族服饰与纹样细节转化为可收藏、可陪伴的作品。",
         },
