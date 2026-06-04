@@ -1,0 +1,686 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>纹样数据库 | 阿热灵绣</title>
+    <style>
+      :root {
+        --gold: #c5a059;
+        --gold2: #f3d58b;
+        --bg: #060b15;
+        --panel: rgba(12, 19, 35, 0.86);
+        --muted: #9aa8bd;
+        --line: rgba(197, 160, 89, 0.28);
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        background: #060b15;
+        color: #fff;
+        line-height: 1.6;
+      }
+      body:before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background:
+          linear-gradient(rgba(6, 11, 21, 0.86), rgba(6, 11, 21, 0.95)),
+          url("assets/images/backgrounds/background.jpg") center/cover fixed;
+        z-index: -1;
+      }
+      header {
+        min-height: 80px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 5% 12px 3.8%;
+        position: sticky;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        background: linear-gradient(
+          180deg,
+          rgba(6, 11, 21, 0.78),
+          rgba(6, 11, 21, 0.48)
+        );
+        backdrop-filter: blur(22px) saturate(135%);
+        border-bottom: 1px solid rgba(243, 213, 139, 0.12);
+        box-shadow: 0 12px 38px rgba(0, 0, 0, 0.12);
+        transition:
+          background 0.35s ease,
+          box-shadow 0.35s ease,
+          border-color 0.35s ease;
+      }
+      header.is-scrolled {
+        background: linear-gradient(
+          180deg,
+          rgba(6, 11, 21, 0.9),
+          rgba(6, 11, 21, 0.7)
+        );
+        border-bottom-color: rgba(243, 213, 139, 0.2);
+        box-shadow: 0 18px 52px rgba(0, 0, 0, 0.28);
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        color: var(--gold);
+        text-decoration: none;
+        font-size: 1.18rem;
+        font-weight: 900;
+        letter-spacing: 2.5px;
+        white-space: nowrap;
+      }
+      .logo img {
+        display: block;
+        width: 82px;
+        height: 56px;
+        object-fit: contain;
+      }
+      nav a {
+        color: var(--muted);
+        text-decoration: none;
+        margin-left: 22px;
+        font-size: 0.92rem;
+      }
+      nav a.active,
+      nav a:hover {
+        color: var(--gold2);
+      }
+      .hero {
+        padding: 70px 6% 32px;
+        text-align: center;
+      }
+      .hero span {
+        color: var(--gold2);
+        letter-spacing: 6px;
+        font-weight: 900;
+        text-transform: uppercase;
+        font-size: 0.78em;
+      }
+      .hero h1 {
+        font-size: clamp(2.5rem, 6vw, 5.5rem);
+        margin: 10px 0;
+      }
+      .hero p {
+        max-width: 840px;
+        margin: auto;
+        color: rgba(255, 255, 255, 0.72);
+      }
+      .db-layout {
+        display: grid;
+        grid-template-columns: 290px 1fr;
+        gap: 28px;
+        padding: 24px 6% 80px;
+      }
+      .sidebar {
+        position: sticky;
+        top: 98px;
+        align-self: start;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: 24px;
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+      }
+      .sidebar h3 {
+        color: var(--gold2);
+        margin-bottom: 16px;
+      }
+      .filter-group {
+        margin-bottom: 22px;
+      }
+      .filter-group label {
+        display: block;
+        color: #fff;
+        margin-bottom: 10px;
+        font-weight: 800;
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+      }
+      .chip {
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--muted);
+        border-radius: 999px;
+        padding: 8px 12px;
+        cursor: pointer;
+        transition: 0.25s;
+      }
+      .chip.active,
+      .chip:hover {
+        background: var(--gold);
+        border-color: var(--gold);
+        color: #08101d;
+        font-weight: 900;
+      }
+      .search {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 22px;
+      }
+      .search input {
+        flex: 1;
+        padding: 16px 18px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.05);
+        color: #fff;
+        font-size: 1em;
+      }
+      .search button {
+        border: 0;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--gold2), var(--gold));
+        padding: 0 26px;
+        font-weight: 900;
+        color: #06101d;
+        cursor: pointer;
+      }
+      .result-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+        color: var(--muted);
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+      }
+      .card {
+        background: rgba(255, 255, 255, 0.045);
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        border-radius: 22px;
+        overflow: hidden;
+        transition: 0.35s;
+        box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
+      }
+      .card:hover {
+        transform: translateY(-10px);
+        border-color: var(--gold);
+        box-shadow: 0 32px 80px rgba(197, 160, 89, 0.18);
+      }
+      .card img {
+        width: 100%;
+        aspect-ratio: 1/1;
+        object-fit: cover;
+        display: block;
+        background: #030711;
+      }
+      .card-body {
+        padding: 16px;
+      }
+      .code {
+        font-family: Georgia, serif;
+        color: var(--gold2);
+        letter-spacing: 2px;
+        font-weight: 900;
+      }
+      .card h3 {
+        margin: 6px 0;
+        font-size: 1.08em;
+      }
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 12px;
+      }
+      .meta span {
+        font-size: 0.72em;
+        border: 1px solid rgba(197, 160, 89, 0.28);
+        color: var(--muted);
+        border-radius: 999px;
+        padding: 4px 8px;
+      }
+      .empty {
+        grid-column: 1/-1;
+        padding: 60px;
+        text-align: center;
+        border: 1px dashed var(--line);
+        border-radius: 24px;
+        color: var(--muted);
+      }
+      .detail {
+        margin-top: 28px;
+        background: linear-gradient(
+          135deg,
+          rgba(197, 160, 89, 0.13),
+          rgba(255, 255, 255, 0.04)
+        );
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        padding: 24px;
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        gap: 24px;
+      }
+      .detail img {
+        width: 220px;
+        border-radius: 20px;
+      }
+      .detail h2 {
+        color: var(--gold2);
+        margin-bottom: 8px;
+      }
+      .detail p {
+        color: rgba(255, 255, 255, 0.72);
+        margin-bottom: 12px;
+      }
+      @media (max-width: 1100px) {
+        .db-layout {
+          grid-template-columns: 1fr;
+        }
+        .sidebar {
+          position: static;
+        }
+        .grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 620px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .detail {
+          grid-template-columns: 1fr;
+        }
+        .detail img {
+          width: 100%;
+        }
+      }
+
+      .shop-transition {
+        position: fixed;
+        inset: 0;
+        z-index: 5000;
+        display: grid;
+        place-items: center;
+        pointer-events: none;
+        opacity: 0;
+        background:
+          radial-gradient(
+            circle at 50% 48%,
+            rgba(197, 160, 89, 0.2),
+            transparent 30%
+          ),
+          #050914;
+        transition: opacity 0.42s ease;
+      }
+      .shop-transition.active {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .shop-transition-brand {
+        display: grid;
+        justify-items: center;
+        gap: 12px;
+        opacity: 0;
+        transform: translateY(14px) scale(0.94);
+      }
+      .shop-transition.active .shop-transition-brand {
+        animation: shopBrandReveal 1.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+      .shop-transition img {
+        width: clamp(150px, 18vw, 250px);
+        max-height: 250px;
+        object-fit: contain;
+      }
+      .shop-transition strong {
+        color: var(--gold2, #f3d58b);
+        font-size: clamp(1.5rem, 3vw, 2.5rem);
+        letter-spacing: 0.42em;
+        padding-left: 0.42em;
+      }
+      .shop-transition small {
+        color: rgba(255, 255, 255, 0.58);
+        letter-spacing: 0.35em;
+        padding-left: 0.35em;
+      }
+      @keyframes shopBrandReveal {
+        0% {
+          opacity: 0;
+          transform: translateY(14px) scale(0.94);
+          filter: blur(10px);
+        }
+        45%,
+        72% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+          filter: blur(0);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-8px) scale(1.035);
+          filter: blur(5px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shop-transition" id="shopTransition" aria-hidden="true">
+      <div class="shop-transition-brand">
+        <img
+          src="assets/images/brand/logo.png?v=20260604-user-logo"
+          alt="阿热灵绣 logo"
+        />
+        <strong>阿热灵绣</strong>
+        <small>ARE LINGXIU · CRAFT BOUTIQUE</small>
+      </div>
+    </div>
+
+    <header>
+      <a href="index.html" class="logo"
+        ><img
+          src="assets/images/brand/logo.png?v=20260604-user-logo"
+          alt="阿热灵绣 logo"
+        /><span>阿热灵绣</span></a
+      >
+      <nav>
+        <a href="index.html">首页</a><a href="about.html">项目背景</a
+        ><a href="patterns.html" class="active">纹样数据库</a
+        ><a href="custom.html">定制引擎</a><a href="shop.html">文创商城</a>
+      </nav>
+    </header>
+    <section class="hero">
+      <span>Embroidery Pattern Archive</span>
+      <h1>纹样数据库</h1>
+      <p>
+        按纹样种类、颜色、寓意、工艺或直接输入代码/名称检索。数据库中的纹样可被定制引擎调取，也可以进入商城转化为商品。
+      </p>
+    </section>
+    <main class="db-layout">
+      <aside class="sidebar">
+        <h3>筛选纹样</h3>
+        <div class="filter-group">
+          <label>纹样种类</label>
+          <div class="chips" id="typeFilters"></div>
+        </div>
+        <div class="filter-group">
+          <label>主要寓意</label>
+          <div class="chips" id="meaningFilters"></div>
+        </div>
+        <div class="filter-group">
+          <label>主色调</label>
+          <div class="chips" id="colorFilters"></div>
+        </div>
+        <div class="filter-group">
+          <label>工艺特点</label>
+          <div class="chips" id="craftFilters"></div>
+        </div>
+      </aside>
+      <section>
+        <div class="search">
+          <input
+            id="searchInput"
+            placeholder="搜索 AR-101、花云、雪山、丰收、金线……"
+          /><button onclick="renderPatterns()">搜索</button>
+        </div>
+        <div class="result-head">
+          <strong id="resultCount"></strong
+          ><span>点击卡片查看传承寓意与产品建议</span>
+        </div>
+        <div class="grid" id="patternGrid"></div>
+        <div class="detail" id="patternDetail"></div>
+      </section>
+    </main>
+    <script>
+      const patterns = [
+        {
+          code: "AR-101",
+          name: "嘉绒花云团纹",
+          type: "花草瑞纹",
+          meaning: "团圆祈福",
+          color: "金",
+          craft: "盘金绣",
+          img: "assets/images/patterns/generate/嘉绒花云团纹.png?v=20260604-user-patterns",
+          desc: "花瓣与云气组成团形结构，适合作为礼赠产品与服饰主视觉。",
+        },
+        {
+          code: "AR-102",
+          name: "雪山守护纹",
+          type: "山川守护",
+          meaning: "庇佑平安",
+          color: "蓝",
+          craft: "平针绣",
+          img: "assets/images/patterns/generate/雪山守护纹.png?v=20260604-user-patterns",
+          desc: "山形中轴表达稳定、守护与川西地域记忆。",
+        },
+        {
+          code: "AR-103",
+          name: "水流丰收纹",
+          type: "水流丰收",
+          meaning: "丰年绵延",
+          color: "蓝",
+          craft: "锁边绣",
+          img: "assets/images/patterns/generate/水流丰收纹.png?v=20260604-user-patterns",
+          desc: "水纹与谷穗结合，象征土地滋养和生活绵延。",
+        },
+        {
+          code: "AR-104",
+          name: "蝶榴新生纹",
+          type: "个性生成",
+          meaning: "多福新生",
+          color: "红",
+          craft: "彩线绣",
+          img: "assets/images/patterns/generate/蝶榴新生纹.png?v=20260604-user-patterns",
+          desc: "蝴蝶与石榴寓意新生和多子多福，适合年轻化数码文创。",
+        },
+        {
+          code: "AR-105",
+          name: "羌笛回旋纹",
+          type: "几何回旋",
+          meaning: "乐舞欢庆",
+          color: "绿",
+          craft: "挑花绣",
+          img: "assets/images/patterns/generate/羌笛回旋纹.png?v=20260604-user-patterns",
+          desc: "旋涡线条模拟羌笛声波，适合音乐节伴手礼。",
+        },
+        {
+          code: "AR-106",
+          name: "金线牡丹纹",
+          type: "花草瑞纹",
+          meaning: "富贵吉祥",
+          color: "金",
+          craft: "盘金绣",
+          img: "assets/images/patterns/generate/金线牡丹纹.png?v=20260604-user-patterns",
+          desc: "层叠花瓣强调华丽感，适合丝巾、胸针和高端礼盒。",
+        },
+        {
+          code: "AR-107",
+          name: "羊角护佑纹",
+          type: "图腾护佑",
+          meaning: "守护力量",
+          color: "红",
+          craft: "锁边绣",
+          img: "assets/images/patterns/generate/羊角护佑纹.png?v=20260604-user-patterns",
+          desc: "羊角弧线代表山地民族的生命力与守护力量。",
+        },
+        {
+          code: "AR-108",
+          name: "星河织带纹",
+          type: "星象织带",
+          meaning: "希望远行",
+          color: "蓝",
+          craft: "平针绣",
+          img: "assets/images/patterns/generate/星河织带纹.png?v=20260604-user-patterns",
+          desc: "星形与织带构成连续边饰，可用于包装腰封。",
+        },
+        {
+          code: "AR-109",
+          name: "石榴多福纹",
+          type: "果实瑞纹",
+          meaning: "多福丰盛",
+          color: "红",
+          craft: "彩线绣",
+          img: "assets/images/patterns/generate/石榴多福纹.png?v=20260604-user-patterns",
+          desc: "果实轮廓饱满，适合婚庆与节庆礼品。",
+        },
+        {
+          code: "AR-110",
+          name: "云雷几何纹",
+          type: "几何回旋",
+          meaning: "驱邪纳吉",
+          color: "金",
+          craft: "挑花绣",
+          img: "assets/images/patterns/generate/云雷几何纹.png?v=20260604-user-patterns",
+          desc: "强烈几何节奏适合现代服饰边饰和海报背景。",
+        },
+        {
+          code: "AR-111",
+          name: "嘉绒藤蔓纹",
+          type: "花草瑞纹",
+          meaning: "生生不息",
+          color: "绿",
+          craft: "锁边绣",
+          img: "assets/images/patterns/generate/嘉绒藤蔓纹.png?v=20260604-user-patterns",
+          desc: "藤蔓循环生长，表达乡村振兴与生命延展。",
+        },
+        {
+          code: "AR-112",
+          name: "日月同辉纹",
+          type: "星象织带",
+          meaning: "光明圆满",
+          color: "金",
+          craft: "盘金绣",
+          img: "assets/images/patterns/generate/日月同辉纹.png?v=20260604-user-patterns",
+          desc: "日月构成仪式感中心纹样，可用于纪念章和摆件。",
+        },
+        {
+          code: "AR-113",
+          name: "飞鸟归巢纹",
+          type: "动物灵纹",
+          meaning: "归乡团聚",
+          color: "蓝",
+          craft: "平针绣",
+          img: "assets/images/patterns/generate/飞鸟归巢纹.png?v=20260604-user-patterns",
+          desc: "飞鸟线条轻盈，适合旅行纪念与研学视觉。",
+        },
+        {
+          code: "AR-114",
+          name: "谷穗丰年纹",
+          type: "水流丰收",
+          meaning: "丰收富足",
+          color: "绿",
+          craft: "彩线绣",
+          img: "assets/images/patterns/generate/谷穗丰年纹.png?v=20260604-user-patterns",
+          desc: "谷穗结构可延展为连续纹，适合农文旅产品。",
+        },
+        {
+          code: "AR-115",
+          name: "莲华净境纹",
+          type: "花草瑞纹",
+          meaning: "清净美好",
+          color: "蓝",
+          craft: "盘金绣",
+          img: "assets/images/patterns/generate/莲华净境纹.png?v=20260604-user-patterns",
+          desc: "莲瓣与金线形成静雅气质，适合香囊和首饰。",
+        },
+        {
+          code: "AR-116",
+          name: "锦带连枝纹",
+          type: "几何回旋",
+          meaning: "连接共生",
+          color: "红",
+          craft: "挑花绣",
+          img: "assets/images/patterns/generate/锦带连枝纹.png?v=20260604-user-patterns",
+          desc: "连续边带适合服装袖口、包装边框与网页装饰。",
+        },
+      ];
+      const state = {
+        type: "全部",
+        meaning: "全部",
+        color: "全部",
+        craft: "全部",
+      };
+      function unique(key) {
+        return ["全部", ...new Set(patterns.map((p) => p[key]))];
+      }
+      function renderChips(id, key) {
+        document.getElementById(id).innerHTML = unique(key)
+          .map(
+            (v) =>
+              `<button class="chip ${state[key] === v ? "active" : ""}" onclick="state.${key}='${v}'; renderAll();">${v}</button>`,
+          )
+          .join("");
+      }
+      function match(p) {
+        const q = document
+          .getElementById("searchInput")
+          .value.trim()
+          .toLowerCase();
+        return (
+          ["type", "meaning", "color", "craft"].every(
+            (k) => state[k] === "全部" || p[k] === state[k],
+          ) &&
+          (!q ||
+            `${p.code}${p.name}${p.type}${p.meaning}${p.color}${p.craft}`
+              .toLowerCase()
+              .includes(q))
+        );
+      }
+      function renderPatterns() {
+        const list = patterns.filter(match);
+        document.getElementById("resultCount").textContent =
+          `共找到 ${list.length} 个纹样`;
+        document.getElementById("patternGrid").innerHTML =
+          list
+            .map(
+              (p, i) =>
+                `<article class="card" onclick="showDetail('${p.code}')"><img src="${p.img}" alt="${p.name}"><div class="card-body"><div class="code">${p.code}</div><h3>${p.name}</h3><div class="meta"><span>${p.type}</span><span>${p.meaning}</span><span>${p.color}</span><span>${p.craft}</span></div></div></article>`,
+            )
+            .join("") ||
+          '<div class="empty">暂无匹配纹样，请放宽筛选条件。</div>';
+        showDetail((list[0] || patterns[0]).code);
+      }
+      function showDetail(code) {
+        const p = patterns.find((x) => x.code === code);
+        document.getElementById("patternDetail").innerHTML =
+          `<img src="${p.img}" alt="${p.name}"><div><div class="code">${p.code}</div><h2>${p.name}</h2><p>${p.desc}</p><p><strong>分类：</strong>${p.type}　<strong>寓意：</strong>${p.meaning}　<strong>色调：</strong>${p.color}　<strong>工艺：</strong>${p.craft}</p><p><strong>产品建议：</strong>文化衫、丝巾、书签、香囊、礼盒包装、数字授权。</p></div>`;
+      }
+      function renderAll() {
+        renderChips("typeFilters", "type");
+        renderChips("meaningFilters", "meaning");
+        renderChips("colorFilters", "color");
+        renderChips("craftFilters", "craft");
+        renderPatterns();
+      }
+      document
+        .getElementById("searchInput")
+        .addEventListener("input", renderPatterns);
+      renderAll();
+    </script>
+    <script>
+      const navigationBar = document.querySelector("header");
+      const syncNavigationBar = () =>
+        navigationBar?.classList.toggle("is-scrolled", window.scrollY > 18);
+      window.addEventListener("scroll", syncNavigationBar, { passive: true });
+      syncNavigationBar();
+    </script>
+    <script>
+      document.addEventListener(
+        "click",
+        (event) => {
+          const shopLink = event.target.closest('a[href="shop.html"]');
+          if (!shopLink) return;
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          const transition = document.getElementById("shopTransition");
+          transition?.classList.add("active");
+          setTimeout(() => (window.location.href = "shop.html"), 1120);
+        },
+        true,
+      );
+    </script>
+  </body>
+</html>
