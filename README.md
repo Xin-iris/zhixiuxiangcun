@@ -28,7 +28,7 @@
 - `assets/images/backgrounds/`：页面背景、活动与服务背景图
 - `assets/images/heritage/`：非遗传承、教材、实验室入口图
 - `assets/images/patterns/`：原有纹样图片
-- `assets/images/patterns/generate/`（也兼容其他名为 `generate` 的目录）：用户上传的正式纹样图片；GitHub Pages 构建时会生成本地纹样清单，首页、纹样数据库、定制引擎和商城统一读取该清单，不再调用 GitHub API
+- `assets/images/patterns/generated/`：正式纹样唯一目录；只读取中文命名的 PNG 新纹样，旧的 `pattern_01.svg`～`pattern_16.svg` 不再进入网站清单。GitHub Pages 构建时会生成本地纹样清单，首页、纹样数据库、定制引擎和商城统一读取该清单
 - `assets/images/products/`：原有文创商品图
 - `assets/images/products/generated/`：新增生成式商品 SVG
 - `assets/images/brand/`：用户上传的品牌 logo：`logo.png`（所有页面统一引用该路径）

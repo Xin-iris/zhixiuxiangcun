@@ -406,8 +406,8 @@
       <span>Embroidery Pattern Archive</span>
       <h1>纹样数据库</h1>
       <p>
-        自动同步 generate
-        文件夹中的全部正式纹样，以图片文件名作为纹样名称，并根据名称特征生成主题分类。支持按名称、编号和分类检索。
+        自动同步 generated
+        文件夹中的全部中文命名正式纹样，以图片文件名作为纹样名称，并根据名称特征生成主题分类。支持按名称、编号和分类检索。
       </p>
     </section>
     <main class="db-layout">
@@ -432,7 +432,7 @@
         </div>
         <div class="result-head">
           <strong id="resultCount">正在同步纹样……</strong
-          ><span>所有图片名称均取自 generate 文件夹</span>
+          ><span>所有纹样名称均取自 generated 文件夹中的中文 PNG 文件</span>
         </div>
         <div class="grid" id="patternGrid"></div>
         <div class="detail" id="patternDetail"></div>
@@ -441,20 +441,15 @@
     <script src="assets/js/pattern-manifest.js"></script>
     <script>
       const uploadedPatternFiles = window.UPLOADED_PATTERN_FILES || [];
-      const IMAGE_EXTENSIONS = new Set([
-        "png",
-        "jpg",
-        "jpeg",
-        "webp",
-        "gif",
-        "avif",
-        "svg",
-      ]);
+      const IMAGE_EXTENSIONS = new Set(["png"]);
       const CATEGORY_RULES = [
-        ["花卉植物", /花|牡丹|莲|梅|兰|竹|菊|叶|藤|草|枝|石榴|谷|穗|果/],
-        ["动物灵兽", /鸟|蝶|鱼|龙|凤|鹿|羊|虎|鹤|兽|雀|燕/],
+        ["花卉植物", /花|牡丹|莲|梅|兰|竹|菊|叶|藤|草|枝|石榴|谷|穗|果|团花/],
+        ["动物灵兽", /鸟|蝶|蝴蝶|鱼|龙|凤|鹿|羊|牛|虎|鹤|兽|雀|燕/],
         ["自然山水", /山|水|河|江|云|雪|日|月|星|海|火|雷|雨/],
-        ["几何符号", /回|旋|带|几何|菱|方|圆|角|连|结|环|格/],
+        [
+          "吉祥符号",
+          /八宝|吉祥|团结|纳福|瑞气|安康|回|旋|带|几何|菱|方|圆|连|结|环|格/,
+        ],
         ["人物生活", /人|舞|笛|农|村|家|节|庆|丰收/],
       ];
       let patterns = [];
@@ -565,10 +560,10 @@
           return;
         }
         note.textContent =
-          "尚未在 generate 文件夹中找到纹样图片。请将图片上传到 main 分支后等待 GitHub Pages 完成部署。";
+          "尚未在 generated 文件夹中找到中文命名的 PNG 纹样。请确认新纹样位于 assets/images/patterns/generated/，并等待 GitHub Pages 完成部署。";
         document.getElementById("resultCount").textContent = "暂未找到纹样";
         document.getElementById("patternGrid").innerHTML =
-          '<div class="empty">部署完成后，generate 文件夹中的全部纹样会自动显示在这里。</div>';
+          '<div class="empty">部署完成后，generated 文件夹中的全部中文命名 PNG 纹样会自动显示在这里。</div>';
         document.getElementById("patternDetail").innerHTML = "";
       }
       document
