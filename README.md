@@ -31,4 +31,4 @@
 - `assets/images/patterns/generated/`：新增生成式纹样 SVG
 - `assets/images/products/`：原有文创商品图
 - `assets/images/products/generated/`：新增生成式商品 SVG
-- `assets/images/brand/`：金属质感透明背景品牌 SVG（纯文本，可直接合并与拉取）
+- `assets/images/brand/`：用户上传的品牌 logo：`logo.png`（所有页面统一引用该路径）
