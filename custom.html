@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>智绣工作室 | 阿热灵绣</title>
+    <title>智绣实验室 | 阿热灵绣</title>
     <style>
       :root {
         --gold: #c5a059;
@@ -56,17 +56,9 @@
         letter-spacing: 2px;
       }
       .logo img {
-        width: 72px;
-        height: 50px;
+        width: 54px;
+        height: 38px;
         object-fit: contain;
-        padding: 4px;
-        border-radius: 14px;
-        background: radial-gradient(
-          circle,
-          rgba(197, 160, 89, 0.16),
-          transparent 68%
-        );
-        filter: drop-shadow(0 0 14px rgba(197, 160, 89, 0.34));
       }
       nav a {
         color: var(--muted);
@@ -403,18 +395,17 @@
     </header>
     <section class="hero">
       <div class="eyebrow">Zhixiu Interactive Engine</div>
-      <h1>智绣工作室</h1>
+      <h1>先生成纹样，再识别入库</h1>
       <p>
-        选择 AI 生成纹样或 AI
-        识别纹样两种能力，在沉浸式工作台中完成创意表达、扫描分析与纹样档案沉淀。
+        左右各占一半：左侧模拟用户偏好生成纹样，右侧模拟扫描识别与数据库入库。动画过程会展示计算、打印、扫描和标签归档，不再直接跳出结果。
       </p>
     </section>
     <main class="lab-grid">
       <section class="module">
-        <div class="eyebrow">AI Pattern Generation</div>
-        <h2>AI生成纹样</h2>
+        <div class="eyebrow">01 Generate Pattern</div>
+        <h2>生成纹样</h2>
         <p>
-          输入寓意、色调与应用场景，工作室会模拟语义分析、针法拆解和织物打印过程，输出可用于文创开发的纹样方案。
+          选择寓意、色调与应用物品，系统会先进行语义拆解，再像打印纸一样慢慢输出纹样方案。
         </p>
         <div class="control-row">
           <select id="meaning">
@@ -450,10 +441,10 @@
         <div class="compute-log" id="genLog">等待生成任务……</div>
       </section>
       <section class="module">
-        <div class="eyebrow">AI Pattern Recognition</div>
-        <h2>AI识别纹样</h2>
+        <div class="eyebrow">02 Recognize & Archive</div>
+        <h2>识别纹样入库</h2>
         <p>
-          上传或选择纹样样本后，工作室会以扫描动效呈现色彩、针法、构图和寓意标签的识别过程，生成可入库的纹样档案。
+          把生成结果或已有样本送入扫描区，系统会逐步提取色彩、针法、构图和寓意标签，最后写入纹样数据库。
         </p>
         <div class="control-row">
           <select id="sample">
@@ -470,10 +461,10 @@
               蝶榴新生纹
             </option></select
           ><button class="btn ghost" onclick="useGenerated()">
-            使用生成纹样
+            使用刚生成纹样
           </button>
         </div>
-        <button class="btn" onclick="recognizePattern()">开始AI识别</button>
+        <button class="btn" onclick="recognizePattern()">开始扫描识别</button>
         <div class="scan-stage" id="scanStage">
           <div class="scan-image">
             <img
@@ -502,7 +493,7 @@
       </section>
     </main>
     <section class="database-strip">
-      <h2>工作室可调取纹样</h2>
+      <h2>实验室可调取纹样</h2>
       <div class="mini-grid">
         <img
           src="assets/images/patterns/generated/pattern_05.svg"
@@ -588,7 +579,7 @@
           ],
           () => {
             document.getElementById("resultTitle").textContent =
-              "AR-LAB 纹样档案已生成";
+              "AR-LAB 新纹样已识别入库";
             document.getElementById("resultDesc").textContent =
               "置信度 96.8%，标签：生成纹样、可授权、适合文创开发。";
             document.getElementById("resultCard").classList.add("active");
