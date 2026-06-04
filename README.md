@@ -28,7 +28,7 @@
 - `assets/images/backgrounds/`：页面背景、活动与服务背景图
 - `assets/images/heritage/`：非遗传承、教材、实验室入口图
 - `assets/images/patterns/`：原有纹样图片
-- `assets/images/patterns/generate/`：用户上传的正式纹样图片，文件名与纹样名称一一对应
+- `assets/images/patterns/generate/`：用户上传的正式纹样图片；纹样数据库会从 GitHub `main` 分支自动读取全部图片，以文件名作为纹样名称，并按名称关键词自动生成侧栏主题分类
 - `assets/images/products/`：原有文创商品图
 - `assets/images/products/generated/`：新增生成式商品 SVG
 - `assets/images/brand/`：用户上传的品牌 logo：`logo.png`（所有页面统一引用该路径）
